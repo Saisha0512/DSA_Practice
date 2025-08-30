@@ -6,10 +6,17 @@ public:
     
     void push(int val) {
         s1.push(val);
+        if (!s2.empty() && val >= s2.top()){
+            s2.push(s2.top());
+        }
+        else {
+            s2.push(val);
+        }
     }
     
     void pop() {
         s1.pop();
+        s2.pop();
     }
     
     int top() {
@@ -17,21 +24,7 @@ public:
     }
     
     int getMin() {
-        int res = INT_MAX;
-        while (!s1.empty()){
-            int el = s1.top();
-            s1.pop();
-            s2.push(el);
-            if (el < res){
-                res = el;
-            }
-        }
-        while (!s2.empty()){
-            int el = s2.top();
-            s2.pop();
-            s1.push(el);
-        }
-        return res;
+        return s2.top();
     }
 };
 
