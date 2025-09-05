@@ -12,10 +12,9 @@
 class Solution {
 public:
     TreeNode* recoverFromPreorder(string traversal) {
-        vector<pair<int, int>> arr; // {value, depth}
-        int i = 0, n = traversal.size();
+        map<int, TreeNode*> tree;
+        int dash = 0, i = 0, n = traversal.size();
         while (i < n){
-            int dash = 0;
             while (i < n && traversal[i] == '-'){
                 dash ++;
                 i ++;
@@ -25,30 +24,21 @@ public:
                 val = val*10 + (traversal[i] - '0');
                 i ++;
             }
+            TreeNode *curr = new TreeNode(val);
+            if (dash > 0){
+                TreeNode *parent = tree[dash - 1];
+                if (parent -> left == NULL){
+                    parent -> left = curr;
+                }
+                else if (parent -> right == NULL){
+                    parent -> right = curr;
+                }
+            }
 
-            arr.push_back({val, dash});
+            tree[dash] = curr;
+            dash = 0;
         }
 
-        TreeNode *root = new TreeNode(arr[0].first);
-        stack<TreeNode*> s;
-        s.push(root);
-        for (int i = 1; i < arr.size(); i ++){
-            int depth = arr[i].second;
-            TreeNode *node = new TreeNode(arr[i].first);
-            while (s.size() > depth){
-                s.pop();
-            }
-            TreeNode *parent = s.top();
-            if (parent -> left == NULL){
-                parent -> left = node;
-            }
-            else if (parent -> right == NULL){
-                parent -> right = node;
-            }
-
-            s.push(node);
-        }
-
-        return root;
+        return tree[0];
     }
 };
