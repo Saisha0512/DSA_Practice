@@ -1,48 +1,56 @@
 class Solution {
 public:
-
-    void scoreHelper(vector<string> &words, unordered_map<char, int> freq, vector<int> &score, int i, int currsc, int &maxsc){
+    int scoreHelper(vector<string> &words, vector<int> &score, vector<int> &lettercnt, int i){
         // Base Case : 
         if (i == words.size()){
-            maxsc = max(maxsc, currsc);
-            return;
+            return 0;
         }
 
         // Recursive Case : 
-        // Case 1 : Not considering the current word : 
-        scoreHelper(words, freq, score, i + 1, currsc, maxsc);
+        int maxsc = 0;
+        // CASE 1 : Not considering the current word : 
+        maxsc = scoreHelper(words, score, lettercnt, i + 1);
 
-        // Case 2 : Not considering the current word : 
-        bool flag = true;
-        int temp = 0;
+        // CASE 2 : Considering the current word : 
+        int currsc = 0;
+        vector<int> wordcnt(26, 0);
         for (char &ch : words[i]){
-            if (freq[ch] > 0){
-                temp += score[ch - 'a'];
-                freq[ch] --;
+            wordcnt[ch - 'a'] ++;
+            currsc += score[ch - 'a'];
+        }
+
+        bool valid = true;
+        for (int i = 0; i < 26; i ++){
+            if (lettercnt[i] >= wordcnt[i]){
+                continue;
             }
             else {
-                flag = false;
+                valid = false;
                 break;
             }
         }
 
-        // If all the letters in current word have the required frequency, then we add its total score in currsc : 
-        if (flag){
-            currsc += temp;
+        if (valid){
+            for (int i = 0; i < 26; i ++){
+                lettercnt[i] -= wordcnt[i];
+            }
+
+            maxsc = max(maxsc, currsc + scoreHelper(words, score, lettercnt, i + 1));
+
+            for (int i = 0; i < 26; i ++){
+                lettercnt[i] += wordcnt[i];
+            }
         }
 
-        // Moving to the next word : 
-        scoreHelper(words, freq, score, i + 1, currsc, maxsc);
+        return maxsc;
     }
 
     int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& score) {
-        unordered_map<char, int> freq;
-        for (int i = 0; i < letters.size(); i ++){
-            freq[letters[i]] ++;
+        vector<int> lettercnt(26, 0);
+        for (char &ch : letters){
+            lettercnt[ch - 'a'] ++;
         }
 
-        int maxsc = 0;
-        scoreHelper(words, freq, score, 0, 0, maxsc);
-        return maxsc;
+        return scoreHelper(words, score, lettercnt, 0);
     }
 };
