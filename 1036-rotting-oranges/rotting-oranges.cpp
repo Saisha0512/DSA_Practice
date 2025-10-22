@@ -1,16 +1,17 @@
 class Solution {
 public:
-    int orangesRotting(vector<vector<int>>& grid) {
+    int orangesRotting(vector<vector<int>> &grid) {
         int n = grid.size(), m = grid[0].size();
-        int fresh = 0;
-        vector<vector<int>> visited = grid;
+
         queue<pair<int, int>> q;
+        int fresh = 0;
+        // Finding the rotten oranges : 
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
-                if (visited[i][j] == 2){
+                if (grid[i][j] == 2){
                     q.push({i, j});
                 }
-                else if (visited[i][j] == 1){
+                else if (grid[i][j] == 1){
                     fresh ++;
                 }
             }
@@ -19,32 +20,32 @@ public:
         if (fresh == 0){
             return 0;
         }
-        else if (q.empty()){
+        if (q.empty()){
             return -1;
         }
 
+        int t = 0;
         vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        int mins = 0;
         while (!q.empty()){
-            int size = q.size(); // Number of the current rotten oranges at this point of time
+            int size = q.size();
             while (size --){
-                auto p = q.front();
+                auto [x, y] = q.front();
                 q.pop();
-                for (auto [dx, dy] : dirs) {
-                    int i = p.first + dx;
-                    int j = p.second + dy;
-                    if (i >= 0 && i < n && j >= 0 && j < m && visited[i][j] == 1){
-                        visited[i][j] = 2;
-                        fresh --;
+
+                for (auto [dx, dy] : dirs){
+                    int i = x + dx, j = y + dy;
+                    if (i >= 0 && j >= 0 && i < n && j < m && grid[i][j] == 1){
+                        grid[i][j] = 2;
                         q.push({i, j});
+                        fresh --;
                     }
                 }
             }
-            mins ++;
+            t ++;
         }
 
         if (fresh == 0){
-            return mins - 1;
+            return t - 1;
         }
         return -1;
     }
