@@ -1,26 +1,27 @@
 class Solution {
-private : 
-    void dfs(int city, vector<vector<int>> &isConn, unordered_set<int> &vis){
+    void dfs(int city, vector<vector<int>> &conn, unordered_set<int> &vis){
         vis.insert(city);
 
-        for (int i = 0; i < isConn[city].size(); i ++){
-            if (isConn[city][i] == 1 && vis.find(i) == vis.end()){
-                dfs(i, isConn, vis);
+        for (int i = 0; i < conn[city].size(); i ++){
+            if (conn[city][i] == 1 && vis.find(i) == vis.end()){
+                dfs(i, conn, vis);
             }
         }
     }
 
 public:
-    int findCircleNum(vector<vector<int>>& isConn) {
-        int v = isConn.size();
+    int findCircleNum(vector<vector<int>> &conn) {
+        int n = conn.size();
+
         unordered_set<int> vis;
-        int provinces = 0;
-        for (int i = 0; i < v; i ++){
+        int cnt = 0;
+        for (int i = 0; i < n; i ++){
             if (vis.find(i) == vis.end()){
-                provinces ++;
-                dfs(i, isConn, vis);
+                cnt ++;
+                dfs(i, conn, vis);
             }
         }
-        return provinces;
+
+        return cnt;
     }
 };
