@@ -27,7 +27,7 @@ public:
         vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         while (!q.empty()){
             int size = q.size();
-            while (size --){
+            while (size --){ // Level - Wise Traversal
                 auto [x , y] = q.front();
                 q.pop();
 
