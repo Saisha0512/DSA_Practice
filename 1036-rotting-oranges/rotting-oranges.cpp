@@ -1,18 +1,17 @@
 class Solution {
 public:
-    int orangesRotting(vector<vector<int>> &grid) {
+    int orangesRotting(vector<vector<int>>& grid) {
         int n = grid.size(), m = grid[0].size();
-
         queue<pair<int, int>> q;
+        // Find the rotten orange : 
         int fresh = 0;
-        // Finding the rotten oranges : 
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
+                if (grid[i][j] == 1){
+                    fresh ++;
+                }
                 if (grid[i][j] == 2){
                     q.push({i, j});
-                }
-                else if (grid[i][j] == 1){
-                    fresh ++;
                 }
             }
         }
@@ -29,11 +28,12 @@ public:
         while (!q.empty()){
             int size = q.size();
             while (size --){
-                auto [x, y] = q.front();
+                auto [x , y] = q.front();
                 q.pop();
 
                 for (auto [dx, dy] : dirs){
                     int i = x + dx, j = y + dy;
+
                     if (i >= 0 && j >= 0 && i < n && j < m && grid[i][j] == 1){
                         grid[i][j] = 2;
                         q.push({i, j});
