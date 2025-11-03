@@ -1,37 +1,44 @@
-// BFS Approach - Kahn's Algorithm : 
+// DFS Approach : 
 class Solution {
-public:
-    bool canFinish(int n, vector<vector<int>>& pre) {
-        vector<vector<int>> graph(n);
-        vector<int> indegree(n, 0);
+    bool dfs(vector<vector<int>> &graph, vector<int> &vis, int node){
+        // Visiting the current node : 
+        vis[node] = 1;
 
-        for(int i = 0; i < pre.size(); i ++){
-            int a = pre[i][0], b = pre[i][1];
-            graph[b].push_back(a);
-            indegree[a] ++;
-        }
-
-        queue<int> q;
-        for (int i = 0; i < n; i ++){
-            if (indegree[i] == 0){
-                q.push(i);
+        // Checking the neighbours : 
+        for (int nbr : graph[node]){
+            if(vis[nbr] == 1){
+                return false; // Cycle Detected
             }
-        }
-
-        int done = 0;
-        while (!q.empty()){
-            int curr = q.front();
-            q.pop();
-            done ++;
-
-            for (int nbr : graph[curr]){
-                indegree[nbr] --;
-                if (indegree[nbr] == 0){
-                    q.push(nbr);
+            if (vis[nbr] == 0){
+                bool subprob = dfs(graph, vis, nbr);
+                if (subprob == false){
+                    return false; // Cycle Detected
                 }
             }
         }
 
-        return (done == n);
+        // Visited the node : 
+        vis[node] = 2;
+        return true;
+    }
+
+public:
+    bool canFinish(int n, vector<vector<int>>& pre) {
+        vector<vector<int>> graph(n);
+        for (int i = 0; i < pre.size(); i ++){
+            int a = pre[i][0], b = pre[i][1];
+            graph[b].push_back(a);
+        }
+
+        vector<int> vis(n, 0);
+        for (int i = 0; i < n; i ++){
+            if(vis[i] == 0){
+                if (dfs(graph, vis, i) == false){
+                    return false; // Cycle detected
+                }
+            }
+        }
+
+        return true;
     }
 };
