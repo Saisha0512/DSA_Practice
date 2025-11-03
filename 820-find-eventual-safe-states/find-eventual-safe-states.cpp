@@ -47,7 +47,6 @@ public:
             if (check == true){
                 res.push_back(i);
             }
-            vis = vector<int>(n, 0);
         }
 
         return res;
