@@ -1,3 +1,4 @@
+// BFS Approach - Kahn's Algorithm : 
 class Solution {
 public:
     bool canFinish(int n, vector<vector<int>>& pre) {
