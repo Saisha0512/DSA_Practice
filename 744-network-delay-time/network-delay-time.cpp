@@ -18,7 +18,7 @@ public:
             auto [nodeDist, node] = pq.top();
             pq.pop();
 
-            if (nodeDist > signal[node]){
+            if (nodeDist != signal[node]){
                 continue; // The iteration for the smallest distance is already done earlier.
             }
 
@@ -33,7 +33,7 @@ public:
         }
 
         // Checking if all the nodes receive the signal & finding out the minimum time it takes for all n nodes to receive the signal : 
-        int time = INT_MIN;
+        int time = 0;
         for (int i = 1; i <= n; i ++){
             if (signal[i] == INT_MAX){
                 return -1;
