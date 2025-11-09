@@ -2,31 +2,22 @@ class Solution {
 public:
     vector<int> rearrangeArray(vector<int>& nums) {
         int n = nums.size();
+        vector<int> res(n);
+        int pos = 0, neg = 1;
 
-        // Separating positive & negative elements in 2 separate arrays : 
-        vector<int> neg, pos;
-        for (int i = 0; i < n; i ++){
-            if (nums[i] < 0){
-                neg.push_back(nums[i]);
+        for (int n : nums){
+            // Updating positive elements at the even index : 
+            if (n > 0){
+                res[pos] = n;
+                pos += 2;
             }
+            // Updating negative elements at the odd index : 
             else {
-                pos.push_back(nums[i]);
+                res[neg] = n;
+                neg += 2;
             }
         }
 
-        for (int i = n - 1; i >= 0; i --){
-            // Updating the positive elements at the even index : 
-            if (i % 2 == 0){
-                nums[i] = pos.back();
-                pos.pop_back();
-            }
-            // Updating the negative elements at the odd index : 
-            else {
-                nums[i] = neg.back();
-                neg.pop_back();
-            }
-        }
-
-        return nums;
+        return res;
     }
 };
