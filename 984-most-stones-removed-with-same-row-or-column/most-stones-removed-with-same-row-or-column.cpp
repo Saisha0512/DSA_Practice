@@ -1,17 +1,16 @@
 class Solution {
-    int dfs(vector<vector<int>> &stones, vector<bool> &vis, int i, int n){
+    // DFS Function to get the number of connected components : 
+    void dfs(vector<vector<int>> &stones, vector<bool> &vis, int curr, int n){
         // Visiting the current stone : 
-        vis[i] = true;
+        vis[curr] = true;
 
-        // Getting the result after removing this stones neighbours : 
-        int res = 0;
-        for (int j = 0; j < n; j ++){
-            if (!vis[j] && (stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1])){
-                res += 1 + dfs(stones, vis, j, n);
+        // Visiting the neighbours of the current stone : 
+        for (int nbr = 0; nbr < n; nbr ++){
+            // If this stone shares x or y coordinate with the current stone & it is yet to be visited, then we implement dfs on it : 
+            if (!vis[nbr] && (stones[curr][0] == stones[nbr][0] || stones[curr][1] == stones[nbr][1])){
+                dfs(stones, vis, nbr, n);
             }
         }
-
-        return res;
     }
 
 public:
@@ -19,13 +18,14 @@ public:
         int n = stones.size();
         vector<bool> vis(n, false);
         int cnt = 0;
-        // Iterating all the stones & performing dfs on each to remove its neighbours :
+        // Iterating all the stones & performing dfs on each to count the number of connected components :
         for (int i = 0; i < n; i ++){
             if (!vis[i]){
-                cnt += dfs(stones, vis, i, n);
+                cnt ++;
+                dfs(stones, vis, i, n);
             }
         }
 
-        return cnt;
+        return n - cnt;
     }
 };
