@@ -19,6 +19,7 @@ public:
         int n = stones.size();
         vector<bool> vis(n, false);
         int cnt = 0;
+        // Iterating all the stones & performing dfs on each to remove its neighbours :
         for (int i = 0; i < n; i ++){
             if (!vis[i]){
                 cnt += dfs(stones, vis, i, n);
