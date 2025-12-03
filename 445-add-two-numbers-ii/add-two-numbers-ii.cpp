@@ -37,17 +37,11 @@ public:
         l2 = reverseLL(l2);
 
         // New LL : 
-        ListNode* head = new ListNode(0, NULL);
-
-        // Adding the first nodes : 
-        int carry = l1 -> val + l2 -> val;
-        head -> val = carry % 10;
-        carry /= 10;
-        l1 = l1 -> next;
-        l2 = l2 -> next;
-
+        ListNode* head = new ListNode(-1, NULL);
         ListNode *temp = head;
-        while (l1 != NULL || l2 != NULL || carry > 9){
+        int carry = 0;
+
+        while (l1 != NULL || l2 != NULL || carry){
             // Adding a new node : 
             ListNode *node = new ListNode();
             node -> next = NULL;
@@ -71,15 +65,8 @@ public:
             temp = node;
         }
 
-        // Adding a new node if any single - digit value is still left to carry : 
-        if (carry){
-            ListNode *node = new ListNode(carry, NULL);
-            temp -> next = node;
-            temp = node;
-        }
-
         // Reversing the LL again : 
-        head = reverseLL(head);
+        head = reverseLL(head -> next);
         return head;
     }
 };
