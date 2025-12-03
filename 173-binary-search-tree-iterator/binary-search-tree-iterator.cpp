@@ -10,6 +10,7 @@
  * };
  */
 class BSTIterator {
+        int idx = -1;
     vector<int> order;
     void inorder(TreeNode* root){
         // Base Case : 
@@ -22,24 +23,18 @@ class BSTIterator {
         order.push_back(root -> val);
         inorder(root -> right);
     }
-    int idx;
 
 public:
     BSTIterator(TreeNode* root) {
         inorder(root);
-        idx = -1;
     }
     
     int next() {
-        idx ++;
-        return order[idx];
+        return order[++ idx];
     }
     
     bool hasNext() {
-        if (idx + 1 < order.size()){
-            return true;
-        }
-        return false;
+        return (idx + 1 < order.size());
     }
 };
 
