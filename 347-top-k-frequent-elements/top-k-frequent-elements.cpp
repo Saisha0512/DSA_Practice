@@ -7,17 +7,19 @@ public:
         }
 
         // Converting into Priority Queue : 
-        priority_queue<pair<int, int>> pq; // Max - heap
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // Min - heap
         for (auto &p : freq){
             pq.push({p.second, p.first});
+            if (pq.size() > k){
+                pq.pop();
+            }
         }
 
         // Popping the top k frequent elements : 
         vector<int> res;
-        for (int i = 0; i < k; i ++){
-            auto curr = pq.top();
+        while (!pq.empty()){
+            res.push_back(pq.top().second);
             pq.pop();
-            res.push_back(curr.second);
         }
 
         return res;
