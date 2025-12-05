@@ -1,18 +1,18 @@
 class Solution {
-    bool dfs(vector<vector<int>> &graph, int node, vector<int> &vis, int color, int parent){
-        // Visiting the current node : 
+    bool graphColoring(vector<vector<int>> &graph, vector<int> &vis, int color, int node, int parent){
+        // Coloring the current node reached : 
         vis[node] = color;
 
-        // Visiting the neighbours : 
+        // Coloring the neighbors : 
         for (auto nbr : graph[node]){
-            // An unvisited Neighbour : 
-            if (vis[nbr] == 0){
-                int subprob = dfs(graph, nbr, vis, 3 - color, node);
+            // If the neighbor is unvisited : 
+            if (!vis[nbr]){
+                bool subprob = graphColoring(graph, vis, 3 - color, nbr, node);
                 if (subprob == false){
                     return false;
                 }
             }
-            // A visited neighbour with the same color :
+            // If an already visited neigbor has the same color as the current node : 
             else if (nbr != parent && vis[nbr] == color){
                 return false;
             }
@@ -27,9 +27,10 @@ public:
         vector<int> vis(n, 0);
 
         for (int i = 0; i < n; i ++){
-            if (vis[i] == 0){
-                bool flag = dfs(graph, i, vis, 1, -1);
-                if (flag == false){
+            if (!vis[i]){
+                bool subprob = graphColoring(graph, vis, 1, i, -1);
+
+                if (subprob == false){
                     return false;
                 }
             }
