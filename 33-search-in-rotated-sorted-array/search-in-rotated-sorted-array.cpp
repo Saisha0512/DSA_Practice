@@ -7,22 +7,22 @@ public:
         while (left <= right){
             int mid = (left + right)/2;
 
-            // Target found : 
+            // Target Found
             if (nums[mid] == target){
                 return mid;
             }
 
-            // If the left half is strictly increasing : 
+            // If the left half is strictly increasing :
             if (nums[left] <= nums[mid]){
                 if (nums[left] <= target && target <= nums[mid]){
-                    right = mid - 1;
+                    right = mid -1;
                 }
                 else {
                     left = mid + 1;
-                }    
+                }
             }
-            
-            // If the right half is strcitly increasing : 
+
+            // If the right half is strictly increasing : 
             if (nums[mid] <= nums[right]){
                 if (nums[mid] <= target && target <= nums[right]){
                     left = mid + 1;
