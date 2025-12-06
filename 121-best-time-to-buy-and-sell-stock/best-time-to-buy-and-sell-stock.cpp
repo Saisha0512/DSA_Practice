@@ -2,13 +2,16 @@ class Solution {
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        int minbuy = INT_MAX, maxprofit = 0;
-        for (int i = 0; i < n; i ++){
-            if (prices[i] < minbuy){
-                minbuy = prices[i];
-            }
+        int buy = prices[0], maxprofit = 0;
 
-            maxprofit = max(maxprofit, prices[i] - minbuy);
+        for (int i = 1; i < n; i ++){
+            // If the current element is less than the last bought stock then we updated the value : 
+            if (prices[i] < buy){
+                buy = prices[i];
+            }
+            else {
+                maxprofit = max(maxprofit, prices[i] - buy);
+            }
         }
 
         return maxprofit;
