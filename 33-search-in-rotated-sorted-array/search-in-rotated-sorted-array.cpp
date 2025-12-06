@@ -2,32 +2,33 @@ class Solution {
 public:
     int search(vector<int>& nums, int target) {
         int n = nums.size();
-        int low = 0, high = n - 1;
-        while (low <= high){
-            int mid = (low + high)/2;
+        int left = 0, right = n - 1;
 
-            // CASE 1 : We found the target element at the mid index : 
+        while (left <= right){
+            int mid = (left + right)/2;
+
+            // Target found : 
             if (nums[mid] == target){
                 return mid;
             }
 
-            // CASE 2 : If the left half of the current mid is strictly increasing : 
-            if (nums[low] <= nums[mid]){
-                if (nums[low] <= target && target <= nums[mid]){
-                    high = mid - 1;
+            // If the left half is strictly increasing : 
+            if (nums[left] <= nums[mid]){
+                if (nums[left] <= target && target <= nums[mid]){
+                    right = mid - 1;
                 }
                 else {
-                    low = mid + 1;
-                }
+                    left = mid + 1;
+                }    
             }
-
-            // CASE 3 : If the right half of the current mid is strictly increasing : 
-            else {
-                if (nums[mid] <= target && target <= nums[high]){
-                    low = mid + 1;
+            
+            // If the right half is strcitly increasing : 
+            if (nums[mid] <= nums[right]){
+                if (nums[mid] <= target && target <= nums[right]){
+                    left = mid + 1;
                 }
                 else {
-                    high = mid - 1;
+                    right = mid - 1;
                 }
             }
         }
