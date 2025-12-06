@@ -1,19 +1,20 @@
 class Solution {
 public:
     int characterReplacement(string s, int k) {
-        int n = s.size(), l = 0, maxcnt = 0, maxlen = 0;
-        map<char, int> freq;
-        for (int r = 0; r < n; r ++){
-            // Updating the frequency of the current character : 
-            freq[s[r]] ++;
-            maxcnt = max(maxcnt, freq[s[r]]);
+        int n = s.size();
+        unordered_map<char, int> freq;
+        int start = 0, maxfreq = 0, maxlen = 0;
 
-            // Contracting the window while (window size - maxcnt) > k : 
-            while ((r - l + 1) - maxcnt > k){
-                freq[s[l]] --;
-                l ++;
+        for (int end = 0; end < n; end ++){
+            freq[s[end]] ++;
+            maxfreq = max(maxfreq, freq[s[end]]); // Updating the maximum frequency in the window 
+
+            while ((end - start + 1) - maxfreq > k){
+                freq[s[start]] --;
+                start ++;
             }
-            maxlen = max(maxlen, r - l + 1);
+
+            maxlen = max(maxlen, end - start + 1);
         }
 
         return maxlen;
