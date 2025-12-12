@@ -1,45 +1,30 @@
 class Solution {
 public:
     int countCoveredBuildings(int n, vector<vector<int>>& buildings) {
-        // Creating vectors to store (x, y) coordinates of the buildings : 
-        unordered_map<int, vector<int>> x, y;
+        vector<int> minrow(n + 1, INT_MAX);
+        vector<int> maxrow(n + 1, INT_MIN);
+        vector<int> mincol(n + 1, INT_MAX);
+        vector<int> maxcol(n + 1, INT_MIN);
 
-        for (auto &b : buildings){
-            int p = b[0], q = b[1];
-
-            x[p].push_back(q);
-            y[q].push_back(p);
-        }
-
-        // Sorting all the vectors : 
-        for (auto &p : x){
-            sort(p.second.begin(), p.second.end());
-        }
-        for (auto &q : y){
-            sort(q.second.begin(), q.second.end());
-        }
-
-        // Iterating over all the buildings & counting the number of safe buildings : 
-        int cnt = 0;
         for (auto &building : buildings){
-            int p = building[0], q = building[1];
+            int x = building[0], y = building[1];
 
-            // Checking the horizontal order : 
-            auto &hort = y[q];
-            auto ith = lower_bound(hort.begin(), hort.end(), p);
-            int idxh = ith - hort.begin();
-            bool left = (idxh > 0);
-            bool right = (idxh < hort.size() - 1);
+            // Updating the mincol & maxcol for this particular x coord : 
+            mincol[x] = min(mincol[x], y);
+            maxcol[x] = max(maxcol[x], y);
 
-            // Checking the vertical order : 
-            auto &vert = x[p];
-            auto itv = lower_bound(vert.begin(), vert.end(), q);
-            int idxv = itv - vert.begin();
-            bool down = (idxv > 0);
-            bool up = (idxv < vert.size() - 1);
+            // Updating the minrow & maxrow for this partcular y coord : 
+            minrow[y] = min(minrow[y], x);
+            maxrow[y] = max(maxrow[y], x);
+        }
 
-            // Checking all the conditions together : 
-            if (left && right && down && up){
+        // Counting the no of safe buildings : 
+        int cnt = 0;
+        for (auto &b : buildings){
+            int x = b[0], y = b[1];
+
+            // Checking the conditions : 
+            if (x > minrow[y] && x < maxrow[y] && y > mincol[x] && y < maxcol[x]){
                 cnt ++;
             }
         }
