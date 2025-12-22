@@ -1,24 +1,21 @@
 class Solution {
-    void dfs(vector<vector<int>> &graph, int node, vector<bool> &vis, vector<vector<int>> &res, vector<int> curr){
+    void dfs(vector<vector<int>> &graph, int node, vector<vector<int>> &res, vector<int> curr){
+        curr.push_back(node);
+
         // Checking if the current node is the destination node : 
         if (node == graph.size() - 1){
-            curr.push_back(node);
             res.push_back(curr);
             return;
         }
-
         // Otherwise, Visiting the current node : 
-        vis[node] = true;
-        curr.push_back(node);
-        // Iterating over all the unvisited neighbour :
-        for (auto nbr : graph[node]){
-            if (!vis[nbr]){
-                dfs(graph, nbr, vis, res, curr);
+        else {
+            // Iterating over all the unvisited neighbour :
+            for (auto nbr : graph[node]){
+                dfs(graph, nbr, res, curr);
             }
         }
-
+        
         // Backtracking & removing the node from the current path : 
-        vis[node] = false;
         curr.pop_back();
     }
 
@@ -27,8 +24,7 @@ public:
         int n = graph.size();
         vector<vector<int>> res;
         vector<int> curr;
-        vector<bool> vis(n, false);
-        dfs(graph, 0, vis, res, curr);
+        dfs(graph, 0, res, curr);
 
         return res;
     }
