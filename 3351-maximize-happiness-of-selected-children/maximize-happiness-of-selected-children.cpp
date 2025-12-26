@@ -2,15 +2,20 @@ class Solution {
 public:
     long long maximumHappinessSum(vector<int>& happiness, int k) {
         int n = happiness.size();
-        sort(happiness.begin(), happiness.end());
-        long long x = 0;
-        long long sum = 0;
-        for (int i = 0; i < k; i ++){
-            long long curr = happiness[n - 1 - i] + x;
-            if (curr >= 0){
-                sum += curr;
+        priority_queue<int> pq; // Max - Heap
+        for (int i = 0; i < n; i ++){
+            pq.push(happiness[i]);
+        }
+
+        long long diff = 0, sum = 0;
+        while (k --){
+            int val = pq.top() + diff;
+            pq.pop();
+
+            if (val >= 0){
+                sum += val;
             }
-            x --;
+            diff --;
         }
 
         return sum;
