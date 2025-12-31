@@ -17,30 +17,39 @@ public:
 */
 
 class Solution {
-    void addLevel(Node *root, int level, unordered_map<int, Node*> &m){
-        // Base Case : 
-        if (root == NULL){
-            return;
-        }
-
-        // Recursive Case : 
-        // Adding the current node to its level : 
-        if (m.find(level) != m.end()){
-            m[level] -> next = root;
-            m[level] = root;
-        }
-        else {
-            m[level] = root;
-        }
-
-        addLevel(root -> left, level + 1, m);
-        addLevel(root -> right, level + 1, m);
-    }
-
 public:
     Node* connect(Node* root) {
-        unordered_map<int, Node*> m;
-        addLevel(root, 1, m);
+        if (root == NULL){
+            return root;
+        }
+
+        queue<Node*> q;
+        q.push(root);
+
+        while (!q.empty()){
+            int size = q.size();
+            Node *curr, *nex;
+
+            while (size --){
+                curr = q.front();
+                q.pop();
+
+                if (size > 0){
+                    nex = q.front();
+                    curr -> next = nex;
+                }
+                else {
+                    curr -> next = NULL;
+                }
+
+                if (curr -> left){
+                    q.push(curr -> left);
+                }
+                if (curr -> right){
+                    q.push(curr -> right);
+                }
+            }
+        }
 
         return root;
     }
