@@ -7,7 +7,7 @@ public:
         for (int num : nums){
             freq[num] ++;
 
-            if (freq[num] == m){
+            if (freq[num] > 1){
                 return num;
             }
         }
