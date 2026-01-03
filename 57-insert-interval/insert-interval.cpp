@@ -1,20 +1,34 @@
 class Solution {
 public:
     vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
-        intervals.push_back(newInterval);
-        sort(intervals.begin(), intervals.end());
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.push({newInterval[0], newInterval[1]});
 
-        vector<vector<int>> res;
-        res.push_back(intervals[0]);
-
-        for (int i = 1; i < intervals.size(); ++i) {
-            if (res.back()[1] >= intervals[i][0]) {
-                res.back()[1] = max(res.back()[1], intervals[i][1]);
-            } else {
-                res.push_back(intervals[i]);
-            }
+        for (auto &i : intervals){
+            pq.push({i[0], i[1]});
         }
 
-        return res;        
+        vector<vector<int>> res;
+
+        // Initializing the last interval encountered : 
+        auto [lastStart, lastEnd] = pq.top();
+        pq.pop();
+
+        while (!pq.empty()){
+            auto [start, end] = pq.top();
+            pq.pop();
+
+            if (start > lastEnd){
+                res.push_back({lastStart, lastEnd});
+                lastStart = start;
+                lastEnd = end;
+            }
+            else {
+                lastEnd = max(lastEnd, end);
+            }
+        }
+        res.push_back({lastStart, lastEnd});
+
+        return res;
     }
 };
