@@ -13,7 +13,18 @@ public:
         dp[1] = max(nums[0], nums[1]);
 
         for (int idx = 2; idx < n; idx ++){
-            dp[idx] = max(dp[idx - 1], dp[idx - 2] + nums[idx]);
+            int amt = INT_MIN;
+            // Case 1 : We dont rob the current house, because the previous house was already robbed 
+            if (idx - 1 >= 0){
+                amt = max(amt, dp[idx - 1]);
+            }
+
+            // Case 2 : We rob the current house, because the (i - 2)th house was robbed 
+            if (idx - 2 >= 0){
+                amt = max(amt, dp[idx - 2] + nums[idx]);
+            }
+
+            dp[idx] = amt;
         }
 
         return dp[n - 1];
