@@ -30,11 +30,11 @@ public:
         for (int s : piles)     stones += s;
 
         vector<vector<int>> dp(n, vector<int>(n, -1));
-        // int alice = takeStone(piles, 0, n - 1, dp);
-        // if (alice > stones - alice){
-        //     return true;
-        // }
+        int alice = takeStone(piles, 0, n - 1, dp);
+        if (alice > stones - alice){
+            return true;
+        }
 
-        return true;
+        return false;
     }
 };
