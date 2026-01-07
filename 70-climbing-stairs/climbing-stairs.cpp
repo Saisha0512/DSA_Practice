@@ -4,8 +4,8 @@ public:
         vector<int> dp(n + 1, 0);
         dp[0] = dp[1] = 1;
 
-        for (int step = 2; step <= n; step ++){
-            dp[step] = ((step - 1 >= 0)? dp[step - 1] : 0) + ((step - 2 >= 0)? dp[step - 2] : 0);
+        for (int i = 2; i <= n; i ++){
+            dp[i] = dp[i - 1] + dp[i - 2];
         }
 
         return dp[n];
