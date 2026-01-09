@@ -1,3 +1,4 @@
+// DFS APPROACH : 
 class Solution {
     vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     void dfs(vector<vector<int>> &grid, int x, int y, vector<vector<bool>> &vis){
