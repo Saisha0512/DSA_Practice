@@ -10,7 +10,7 @@
  * };
  */
 class Solution {
-    pair<int, TreeNode*> checkLev(TreeNode *root, int currlev, int &maxlev, unordered_map<int, vector<TreeNode*>> &m){
+    pair<int, TreeNode*> checkLev(TreeNode *root, int currlev, int &maxlev){
         // Base Case : 
         if (root == NULL){
             return {-1, NULL};
@@ -19,7 +19,6 @@ class Solution {
         if (currlev > maxlev){
             maxlev = currlev;
         }
-        m[currlev].push_back(root);
 
         // Leaf node : 
         if (root -> left == NULL && root -> right == NULL){
@@ -27,8 +26,8 @@ class Solution {
         }
 
         // Recursive Case : 
-        auto ltree = checkLev(root -> left, currlev + 1, maxlev, m);
-        auto rtree = checkLev(root -> right, currlev + 1, maxlev, m);
+        auto ltree = checkLev(root -> left, currlev + 1, maxlev);
+        auto rtree = checkLev(root -> right, currlev + 1, maxlev);
 
         if (ltree.first == rtree.first){
             return {ltree.first, root};
@@ -42,10 +41,9 @@ class Solution {
 
 public:
     TreeNode* subtreeWithAllDeepest(TreeNode* root) {
-        unordered_map<int, vector<TreeNode*>> m;
         int maxlev = INT_MIN;
 
-        auto ans = checkLev(root, 0, maxlev, m);
+        auto ans = checkLev(root, 0, maxlev);
         return ans.second;
     }
 };
