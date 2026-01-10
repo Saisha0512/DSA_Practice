@@ -1,59 +1,57 @@
 class Solution {
-    vector<pair<int, int>> dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    void bfs(vector<vector<int>> &heights, queue<pair<int, int>> &q, vector<vector<bool>> &vis){
+        while (!q.empty()){
+            auto [x, y] = q.front();
+            q.pop();
 
-    void dfs(vector<vector<int>> &heights, vector<vector<bool>> &vis, int x, int y){
-        int n = heights.size(), m = heights[0].size();
-        // Marking the current node as visited : 
-        vis[x][y] = true;
+            for (auto [dx, dy] : dirs){
+                int i = x + dx, j = y + dy;
 
-        for (auto [dx, dy] : dirs){
-            int i = x + dx, j = y + dy;
+                if (i < 0 || j < 0 || i >= heights.size() || j >= heights[0].size() || vis[i][j] || heights[x][y] > heights[i][j]){
+                    continue;
+                }
 
-            if (i < 0 || j < 0 || i >= n || j >= m || heights[i][j] < heights[x][y] || vis[i][j]){
-                continue;
+                q.push({i, j});
+                vis[i][j] = true;
             }
-
-            dfs(heights, vis, i, j);
         }
     }
 
 public:
     vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
         int n = heights.size(), m = heights[0].size();
-        vector<vector<bool>> pacific(n, vector<bool>(m, false));
-        vector<vector<bool>> atlantic(n, vector<bool>(m, false));
+        vector<vector<bool>> pacific(n, vector<bool>(m, false)), atlantic(n, vector<bool>(m, false));
 
-        // Traversing the boundaries :
-        // Traversing the columns : 
+        queue<pair<int, int>> q;
+        // Pushing all the border elements in the queue for pacific first : 
         for (int i = 0; i < n; i ++){
-            // First column : 
-            if (!pacific[i][0]){
-                dfs(heights, pacific, i, 0);
-            }
-
-            // Last Column : 
-            if (!atlantic[i][m - 1]){
-                dfs(heights, atlantic, i, m - 1);
-            }
+            q.push({i, 0});
+            pacific[i][0] = true;
         }
-        // Traversing the rows : 
-        for (int i = 0; i < m; i ++){
-            // First Row : 
-            if (!pacific[0][i]){
-                dfs(heights, pacific, 0, i);
-            }
-            // Last Row : 
-            if (!atlantic[n - 1][i]){
-                dfs(heights, atlantic, n - 1, i);
-            }
+        for (int j = 0; j < m; j ++){
+            q.push({0, j});
+            pacific[0][j] = true;
         }
+        bfs(heights, q, pacific);
+        while (!q.empty())  q.pop();
 
+        // Pushing all the border elements in the queue for atlantic ocean now : 
+        for (int i = 0; i < n; i ++){
+            q.push({i, m - 1});
+            atlantic[i][m - 1] = true;
+        }
+        for (int j = 0; j < m; j ++){
+            q.push({n - 1, j});
+            atlantic[n - 1][j] = true;
+        }
+        bfs(heights, q, atlantic);
 
-        // Iterating to check all the cells who can send water to both pacific & atlantic ocean : 
+        // Checking for all the cells : 
         vector<vector<int>> res;
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
-                if (atlantic[i][j] && pacific[i][j]){
+                if (pacific[i][j] && atlantic[i][j]){
                     res.push_back({i, j});
                 }
             }
