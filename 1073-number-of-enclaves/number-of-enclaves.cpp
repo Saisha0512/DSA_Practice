@@ -1,37 +1,55 @@
-// DFS APPROACH : 
+// BFS APPROACH : 
 class Solution {
-    vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    void dfs(vector<vector<int>> &grid, int x, int y, vector<vector<bool>> &vis){
-        // Base Case : 
-        if (x < 0 || y < 0 || x >= grid.size() || y >= grid[0].size() || grid[x][y] == 0 || vis[x][y]){
-            return;
-        }
-
-        // Visiting the current cell : 
-        vis[x][y] = true;
-
-        // Recursive Case : 
-        for (auto [dx, dy] : dirs){
-            dfs(grid, x + dx, y + dy, vis);
-        }
-    }
-
 public:
     int numEnclaves(vector<vector<int>>& grid) {
         int n = grid.size(), m = grid[0].size();
 
+        queue<pair<int, int>> q;
         vector<vector<bool>> vis(n, vector<bool>(m, false));
-        // Iterating over the boundary rows : 
-        for (int i = 0; i < m; i ++){
-            dfs(grid, 0, i, vis);
-            dfs(grid, n - 1, i, vis);
-        }
-        // Iterating over the boundary columns : 
+        vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        // Iterating over the boundary elements : 
         for (int i = 0; i < n; i ++){
-            dfs(grid, i, 0, vis);
-            dfs(grid, i, m - 1, vis);
+            // First col : 
+            if (grid[i][0] == 1){
+                vis[i][0] = true;
+                q.push({i, 0});
+            }
+            // Last col : 
+            if (grid[i][m - 1] == 1){
+                vis[i][m - 1] = true;
+                q.push({i, m - 1});
+            }
+        }
+        for (int i = 0; i < m; i ++){
+            // First row : 
+            if (grid[0][i] == 1){
+                vis[0][i] = true;
+                q.push({0, i});
+            }
+            // Last row : 
+            if (grid[n - 1][i] == 1){
+                vis[n - 1][i] = true;
+                q.push({n - 1, i});
+            }
         }
 
+        // BFS Loop : 
+        while (!q.empty()){
+            auto [x, y] = q.front();
+            q.pop();
+
+            for (auto [dx, dy] : dirs){
+                int i = x + dx, j = y + dy;
+                if (i < 0 || j < 0 || i >= n || j >= m || vis[i][j] || grid[i][j] == 0){
+                    continue;
+                }
+
+                vis[i][j] = true;
+                q.push({i, j});
+            }
+        }
+
+        // Checking all through all the cells : 
         int cnt = 0;
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
