@@ -2,33 +2,31 @@ class Solution {
 public:
     int search(vector<int>& nums, int target) {
         int n = nums.size();
-        int left = 0, right = n - 1;
+        int l = 0, r = n - 1;
+        while (l <= r){
+            int mid = (l + r)/2;
 
-        while (left <= right){
-            int mid = (left + right)/2;
-
-            // Target Found
             if (nums[mid] == target){
                 return mid;
             }
 
-            // If the left half is strictly increasing :
-            if (nums[left] <= nums[mid]){
-                if (nums[left] <= target && target <= nums[mid]){
-                    right = mid -1;
+            // If the left half is strictly increasing : 
+            if (nums[l] <= nums[mid]){
+                if (nums[l] <= target && target <= nums[mid]){
+                    r = mid - 1;
                 }
                 else {
-                    left = mid + 1;
+                    l = mid + 1;
                 }
             }
 
             // If the right half is strictly increasing : 
-            if (nums[mid] <= nums[right]){
-                if (nums[mid] <= target && target <= nums[right]){
-                    left = mid + 1;
+            if (nums[mid] <= nums[r]){
+                if (nums[mid] <= target && target <= nums[r]){
+                    l = mid + 1;
                 }
                 else {
-                    right = mid - 1;
+                    r = mid - 1;
                 }
             }
         }
