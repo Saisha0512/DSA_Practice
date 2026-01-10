@@ -1,41 +1,48 @@
-// BFS APPROACH : 
+// DFS APPROACH : 
 class Solution {
-public:
-    bool canFinish(int n, vector<vector<int>>& pre) {
-        // Constructing the graph : 
-        vector<int> indegree(n, 0);
-        vector<vector<int>> graph(n);
-        for (auto &p : pre){
-            int a = p[0], b = p[1];
+    bool dfs(vector<vector<int>> &graph, int node, vector<int> &state){
+        // Visiting the current node : 
+        state[node] = 1;
 
-            graph[b].push_back(a); // Directed graph
-            indegree[a] ++;
-        }
-
-        queue<int> q;
-        // Checking for the node with indegree = 0
-        for (int i = 0; i < n; i ++){
-            if (indegree[i] == 0){
-                q.push(i);
+        // Iterating all over the neighbors of the current node : 
+        for (auto nbr : graph[node]){
+            // Cycle detected : 
+            if (state[nbr] == 1){
+                return false;
             }
-        }
 
-        // Iterating over the queue :
-        int cnt = 0; // To maintain the count of the courses that are completed
-        while (!q.empty()){
-            int curr = q.front();
-            q.pop();
-            cnt ++;
-
-            for (int nbr : graph[curr]){
-                indegree[nbr] --;
-
-                if (indegree[nbr] == 0){
-                    q.push(nbr);
+            // If the current nbr is not visited, then we visit it : 
+            if (state[nbr] == 0){
+                if (!dfs(graph, nbr, state)){
+                    return false; // Cycle Detected
                 }
             }
         }
 
-        return (cnt == n);
+        // Marking the current node as visited : 
+        state[node] = 2;
+        return true;
+    }
+
+public:
+    bool canFinish(int n, vector<vector<int>>& pre) {
+        // Constructing the Adjacency List of the Graph : 
+        vector<vector<int>> graph(n);
+        for (auto &e : pre){
+            int a = e[0], b = e[1];
+
+            graph[b].push_back(a);
+        }
+
+        vector<int> state(n, 0);
+        for (int i = 0; i < n; i ++){
+            if (state[i] == 0){
+                if (!dfs(graph, i, state)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 };
