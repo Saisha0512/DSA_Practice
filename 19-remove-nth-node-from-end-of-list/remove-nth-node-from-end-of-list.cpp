@@ -10,14 +10,15 @@
  */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int k) {
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
         // Base Case : 
         if (head == NULL){
-            return head;
+            return NULL;
         }
 
+        // Iterative Case : 
         ListNode *slow = head, *fast = head;
-        for (int i = 0; i < k; i ++){
+        for (int i = 0; i < n; i ++){
             fast = fast -> next;
         }
 
@@ -31,10 +32,11 @@ public:
 
         // Otherwise : 
         while (fast -> next != NULL){
-            slow = slow -> next;
             fast = fast -> next;
+            slow = slow -> next;
         }
 
+        // Deleting the nth node : 
         ListNode *temp = slow -> next;
         slow -> next = temp -> next;
         delete temp;
