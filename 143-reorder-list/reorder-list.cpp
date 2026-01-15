@@ -11,7 +11,7 @@
 class Solution {
     ListNode* reverseLL(ListNode *head){
         // Base Case : 
-        if (head -> next == NULL){
+        if (head == NULL || head -> next == NULL){
             return head;
         }
 
@@ -19,21 +19,45 @@ class Solution {
         ListNode *newHead = reverseLL(head -> next);
         head -> next -> next = head;
         head -> next = NULL;
+
         return newHead;
     }
 
-public:
-    void reorderList(ListNode* head) {
+    ListNode* mid(ListNode *head){
         // Base Case : 
-        if (head == NULL || head -> next == NULL || head -> next -> next == NULL) {
+        if (head == NULL || head -> next == NULL){
+            return head;
+        }
+
+        ListNode *slow = head, *fast = head;
+        while (fast && fast -> next){
+            slow = slow -> next;
+            fast = fast -> next -> next;
+        }
+
+        return slow;
+    }
+
+public:
+    void reorderList(ListNode* a) {
+        if (a == NULL || a -> next == NULL){
             return;
         }
 
-        // Reversing list for every iteration : 
-        ListNode *temp = head;
-        while (temp -> next -> next != NULL){
-            temp -> next = reverseLL(temp -> next);
-            temp = temp -> next;
+        ListNode *middle = mid(a);
+        ListNode *b = middle -> next;
+        middle -> next = NULL;
+        b = reverseLL(b);
+
+        while (a && b){
+            ListNode *temp1 = a -> next, *temp2 = b -> next;
+
+            // Updating the links :
+            a ->  next = b;
+            b -> next = temp1;
+
+            a = temp1;
+            b = temp2;
         }
     }
 };
