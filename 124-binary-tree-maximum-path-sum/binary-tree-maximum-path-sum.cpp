@@ -11,30 +11,27 @@
  */
 class Solution {
     // {maxBranchSum, maxPathSum}
-    pair<int, int> calculateSum(TreeNode *root){
-        // Base Case :
+    pair<int, int> checkSum(TreeNode *root){
+        // Base Case : 
         if (root == NULL){
             return {0, INT_MIN};
         }
 
         // Recursive Case : 
-        auto ltree = calculateSum(root -> left);
-        auto rtree = calculateSum(root -> right);
+        auto ltree = checkSum(root -> left);
+        auto rtree = checkSum(root -> right);
+        int leftBranch = max(0, ltree.first);
+        int rightBranch = max(0, rtree.first);
 
-        int leftbranch = max(ltree.first, 0);
-        int rightbranch = max(rtree.first, 0);
-
-        int maxBranchSum = root -> val + max(leftbranch, rightbranch);
-        int throughRoot = leftbranch + rightbranch + root -> val;
+        int branchSum = root -> val + max(leftBranch, rightBranch);
+        int throughRoot = leftBranch + root -> val + rightBranch;
         int maxPathSum = max(throughRoot, max(ltree.second, rtree.second));
 
-        return {maxBranchSum, maxPathSum};
+        return {branchSum, maxPathSum};
     }
 
 public:
     int maxPathSum(TreeNode* root) {
-        auto res = calculateSum(root);
-
-        return res.second;
+        return checkSum(root).second;
     }
 };
