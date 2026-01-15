@@ -2,23 +2,23 @@ class Solution {
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
         int n = nums.size();
+        vector<int> left(n, 1), right(n, 1);
 
-        vector<int> leftprod(n, 1), rightprod(n, 1);
-        // Calculating the cumulative product from the left side of the array : 
+        // Calculating the left prefix product : 
         for (int i = 1; i < n; i ++){
-            leftprod[i] = leftprod[i - 1] * nums[i - 1];
+            left[i] = (left[i - 1] * nums[i - 1]);
         }
-        
-        // Calculating the cumulative product from the right side of the array : 
+
+        // Calculating the right prefix product : 
         for (int i = n - 2; i >= 0; i --){
-            rightprod[i] = rightprod[i + 1] * nums[i + 1];
+            right[i] = (right[i + 1] * nums[i + 1]);
         }
 
-        // Calculating the product of array excpet self for each index : 
+        // Calculating the ans vector : 
         for (int i = 0; i < n; i ++){
-            leftprod[i] *= rightprod[i];
+            left[i] *= right[i];
         }
 
-        return leftprod;
+        return left;
     }
 };
