@@ -3,39 +3,46 @@ public:
     void gameOfLife(vector<vector<int>>& board) {
         int n = board.size(), m = board[0].size();
 
-        vector<vector<int>> live(n, vector<int>(m, 0));
-        vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
-        
-        // Checking the live nbrs of each cell : 
-        for (int x = 0; x < n; x ++){
-            for (int y = 0; y < m; y ++){
-
-                for (auto [dx, dy] : dirs){
-                    int i = x + dx, j = y + dy;
-                    if (i < 0 || j < 0 || i >= n  || j >= m){
-                        continue;
-                    }
-
-                    if (board[i][j] == 1){
-                        live[x][y] ++;
-                    }
+        vector<vector<int>> pre(n, vector<int>(m, 0));
+        for (int i = 0; i < n; i ++){
+            for (int j = 0; j < m; j ++){
+                pre[i][j] = board[i][j];
+                if (i > 0){
+                    pre[i][j] += pre[i - 1][j];
+                }
+                if (j > 0){
+                    pre[i][j] += pre[i][j - 1];
+                }
+                if (i > 0 && j > 0){
+                    pre[i][j] -= pre[i - 1][j - 1];
                 }
             }
         }
 
-        // Checking the interaction of each cell : 
+        // Checking the interactions for each cell : 
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
+                int a = ((i > 0)? i - 1 : 0), b = ((j > 0)? j - 1 : 0);
+                int c = ((i < n - 1)? i + 1 : n - 1), d = ((j < m - 1)? j + 1 : m - 1);
+                int live = pre[c][d];
+                if (a > 0){
+                    live -= pre[a - 1][d];
+                }
+                if (b > 0){
+                    live -= pre[c][b - 1];
+                }
+                if (a > 0 && b > 0){
+                    live += pre[a - 1][b - 1];
+                }
+
                 if (board[i][j] == 0){
-                    if (live[i][j] == 3){
+                    if (live == 3){
                         board[i][j] = 1;
                     }
                 }
                 else {
-                    if (live[i][j] < 2){
-                        board[i][j] = 0;
-                    }
-                    else if (live[i][j] == 2 || live[i][j] == 3){
+                    live --;
+                    if (live == 2 || live == 3){
                         continue;
                     }
                     else {
