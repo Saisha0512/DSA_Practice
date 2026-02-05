@@ -3,27 +3,53 @@ public:
     void setZeroes(vector<vector<int>>& matrix) {
         int n = matrix.size(), m = matrix[0].size();
 
-        vector<int> rows, cols;
+        bool firstRow = false, firstCol = false;
+        // Checking the first row : 
+        for (int i = 0; i < m; i ++){
+            if (matrix[0][i] == 0){
+                firstRow = true;
+                break;
+            }
+        }
+
+        // Checking the first col : 
         for (int i = 0; i < n; i ++){
-            for (int j = 0; j < m; j ++){
+            if (matrix[i][0] == 0){
+                firstCol = true;
+                break;
+            }
+        }
+
+        // Checking for the rest of the matrix : 
+        for (int i = 1; i < n; i ++){
+            for (int j = 1; j < m; j ++){
                 if (matrix[i][j] == 0){
-                    rows.push_back(i);
-                    cols.push_back(j);
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
                 }
             }
         }
 
-        // Making all the elements in the valid rows = 0 : 
-        for (int r : rows){
-            for (int i = 0; i < m; i ++){
-                matrix[r][i] = 0;
+        // Updating the values of every cell : 
+        for (int i = 1; i < n; i ++){
+            for (int j = 1; j < m; j ++){
+                if (matrix[i][0] == 0 || matrix[0][j] == 0){
+                    matrix[i][j] = 0;
+                }
             }
         }
 
-        // Making all the elements in the valid cols = 0 : 
-        for (int c : cols){
+        // Updating for the first row : 
+        if (firstRow){
+            for (int i = 0; i < m; i ++){
+                matrix[0][i] = 0;
+            }
+        }
+
+        // Updating for the first col : 
+        if (firstCol){
             for (int i = 0; i < n; i ++){
-                matrix[i][c] = 0;
+                matrix[i][0] = 0;
             }
         }
     }
