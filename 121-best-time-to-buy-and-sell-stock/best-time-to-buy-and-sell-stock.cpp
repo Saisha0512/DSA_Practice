@@ -2,16 +2,16 @@ class Solution {
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        int buy = INT_MAX, maxprofit = 0;
-        for (int i = 0; i < n; i ++){
-            // Check for buying the current stock : 
-            if (prices[i] < buy){
-                buy = prices[i];
-            }
 
-            maxprofit = max(maxprofit, prices[i] - buy);
+        int maxProf = 0, lastBuy = prices[0];
+        for (int i = 1; i < n; i ++){
+            maxProf = max(maxProf, prices[i] - lastBuy);
+            lastBuy = min(lastBuy, prices[i]);
         }
 
-        return maxprofit;
+        return maxProf;
+        
+        // TC : O(n)
+        // SC : O(1)
     }
 };
