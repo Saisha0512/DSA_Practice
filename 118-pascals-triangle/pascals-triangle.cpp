@@ -4,20 +4,24 @@ public:
         vector<vector<int>> pascal;
 
         for (int i = 0; i < n; i ++){
-            vector<int> temp;
+            vector<int> curr;
 
             for (int j = 0; j < i + 1; j ++){
                 if (j == 0 || j == i){
-                    temp.push_back(1);
+                    curr.push_back(1);
                 }
                 else {
-                    int curr = pascal[i - 1][j] + pascal[i - 1][j  - 1];
-                    temp.push_back(curr);
+                    int temp = pascal[i - 1][j - 1] + pascal[i - 1][j];
+                    curr.push_back(temp);
                 }
             }
 
-            pascal.push_back(temp);
+            pascal.push_back(curr);
         }
+
         return pascal;
+
+        // TC : O(n * n)
+        // SC : O(n * n)
     }
 };
