@@ -52,5 +52,8 @@ public:
                 matrix[i][0] = 0;
             }
         }
+
+        // TC : O(n x m)
+        // SC : O(1)
     }
 };
