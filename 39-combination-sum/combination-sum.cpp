@@ -5,7 +5,7 @@ class Solution {
             res.push_back(curr);
             return;
         }
-        if (i == nums.size() || target < 0){
+        if (i == nums.size()){
             return;
         }
 
@@ -14,11 +14,13 @@ class Solution {
         check(nums, target, i + 1, curr, res);
 
         // Case 2 : Pick the current element
-        curr.push_back(nums[i]);
-        check(nums, target - nums[i], i, curr, res);
+        if (target >= nums[i]){
+            curr.push_back(nums[i]);
+            check(nums, target - nums[i], i, curr, res);
 
-        // Backtrack : 
-        curr.pop_back();
+            // Backtrack 
+            curr.pop_back();
+        }
     }
 
 public:
