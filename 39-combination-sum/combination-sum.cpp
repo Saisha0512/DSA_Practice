@@ -34,3 +34,6 @@ public:
         return res;
     }
 };
+
+// TC : O(2^target)
+// SC : Hypothetical SC, very difficult to calculate the most accurate one
