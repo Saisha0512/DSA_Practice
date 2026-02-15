@@ -34,7 +34,7 @@ public:
 
         int maxlen = 0;
         for (int i = 0; i < n; i ++){
-            for (int j = i + maxlen; j < n; j ++){
+            for (int j = i; j < n; j ++){
                 if (j - i + 1 <= maxlen){
                     continue;
                 }
