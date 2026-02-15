@@ -27,3 +27,5 @@ public:
         return res;
     }
 };
+// TC : O(2^n x n)
+// SC : O(2^n)
