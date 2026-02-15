@@ -34,3 +34,6 @@ public:
         return res;
     }
 };
+
+// TC : O(n x n!)
+// SC : O(n)
