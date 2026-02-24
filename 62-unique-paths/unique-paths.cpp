@@ -1,28 +1,36 @@
-// BOTTOM UP DP APPROACH : 
+// TOP DOWN DP APPROACH : 
 class Solution {
-public:
-    int uniquePaths(int n, int m) {
-        vector<vector<int>> dp(n, vector<int>(m, 0));
-
-        // Base Case : 
-        // There is only one way to reach (0, 0) cell : 
-        dp[0][0] = 1;
-
-        // Bottom - up DP Loop : 
-        for (int i = 0; i < n; i ++){
-            for (int j = 0; j < m; j ++){
-                // Case 1 : To reach the current cell, we can come from the upper cell
-                if (i > 0){
-                    dp[i][j] += dp[i - 1][j];
-                }
-
-                // Case 2 : To reach the current cell, we can come from the left cell
-                if (j > 0){
-                    dp[i][j] += dp[i][j - 1];
-                }
-            }
+    int addPath(int i, int j, int n, int m, vector<vector<int>> &dp){
+        // Base Case : Reached the destination cell
+        if (i == n - 1 && j == m - 1){
+            return 1;
         }
 
-        return dp[n - 1][m - 1];
+        // Check DP : 
+        if (dp[i][j] != -1){
+            return dp[i][j];
+        }
+
+        // Recursive Case : 
+        // Case 1 : Moving right
+        int right = 0;
+        if (j + 1 < m){
+            right = addPath(i, j + 1, n, m, dp);
+        }
+
+        // Case 2 : Moving down
+        int down = 0;
+        if (i + 1 < n){
+            down = addPath(i + 1, j, n, m, dp);
+        }
+
+        dp[i][j] = (right + down);
+        return dp[i][j];
+    }
+
+public:
+    int uniquePaths(int n, int m) {
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+        return addPath(0, 0, n, m, dp);
     }
 };
