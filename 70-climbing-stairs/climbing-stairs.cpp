@@ -1,18 +1,24 @@
-// BOTTOM - UP APPROACH : 
+// TOP - DOWN APPROACH : 
+vector<int> dp(46, -1);
 class Solution {
-public:
-    int climbStairs(int n) {
-        vector<int> dp(n + 1, 0);
-
-        // base cases
-        dp[0] = 1; // by staying at the ground itself
-        dp[1] = 1; // by climbing one stair
-
-        // bottom up loop
-        for (int i = 2; i <= n; i ++){
-            dp[i] = dp[i - 1] + dp[i - 2];
+    int climb(int n){
+        // base case
+        if (n == 0 || n == 1){
+            return 1;
         }
 
-        return dp[n];
+        // check dp
+        if (dp[n] != -1){
+            return dp[n];
+        }
+
+        // recursive case
+        int ans = climb(n - 1) + climb(n - 2);
+        return dp[n] = ans;
+    }
+
+public:
+    int climbStairs(int n) {
+        return climb(n);
     }
 };
