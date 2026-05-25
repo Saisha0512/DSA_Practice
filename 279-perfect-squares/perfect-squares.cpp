@@ -2,10 +2,10 @@
 class Solution {
     vector<int> dp;
 
-    int checkSquare(int n){
+    int square(int n){
         // base case
-        if (n == 0 || n == 1){
-            return n;
+        if (n == 0){
+            return 0;
         }
 
         // check dp
@@ -14,18 +14,19 @@ class Solution {
         }
 
         // recursive case
-        int ans = INT_MAX;
+        // looping through all the possible square on adding which we could get the current n : 
+        int tempans = INT_MAX;
         for (int i = 1; i * i <= n; i ++){
-            ans = min(ans, 1 + checkSquare(n - i * i));
+            tempans = min(tempans, 1 + square(n - (i * i)));
         }
 
-        return dp[n] = ans;
+        return dp[n] = tempans;
     }
 
 public:
     int numSquares(int n) {
         dp.resize(n + 1, -1);
 
-        return checkSquare(n);
+        return square(n);
     }
 };
