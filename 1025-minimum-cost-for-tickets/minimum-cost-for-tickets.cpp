@@ -29,6 +29,7 @@ class Solution {
                 currdays = 30;
             }
 
+            // ignoring all those days for which this ticket is bought
             int j = n - 2;
             while (j >= 0 && days[j] >= days[n - 1] - currdays + 1){
                 j --;
