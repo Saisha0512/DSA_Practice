@@ -22,7 +22,7 @@ class Solution {
                 // using the ith coint
                 int currans = change(coins, amt - coins[i]);
                 if (currans != INT_MAX){
-                    tempans = min(tempans, currans + 1); // taking the minimum possible answer from all these steps
+                    tempans = min(tempans, currans + 1); // taking the minimum possible answer from all these options
                 }
             }
         }
