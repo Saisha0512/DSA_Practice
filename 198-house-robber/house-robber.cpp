@@ -1,36 +1,33 @@
-// TOP - DOWN APPROACH :
+// TOP - DOWN APPROACH : 
 class Solution {
     vector<int> dp;
 
-    int rob(vector<int> &nums, int i){
+    int robbery(vector<int> &nums, int n){
         // base case
-        if (i == 0){
-            return nums[i];
-        }
-        if (i == 1){ // you can either rob 0th or 1st house
-            return max(nums[0], nums[1]);
+        if (n <= 0){
+            return 0;
         }
 
         // check dp
-        if (dp[i] != -1){
-            return dp[i];
+        if (dp[n] != -1){
+            return dp[n];
         }
 
         // recursive case
         // case 1 : skip the current house
-        int op1 = rob(nums, i - 1);
+        int op1 = robbery(nums, n - 1);
 
-        // case 2 : robbing the current house & going for the (i - 2)th house
-        int op2 = nums[i] + rob(nums, i - 2);
+        // case 2 : rob the current house & move to (n - 2)th house
+        int op2 = robbery(nums, n - 2) + nums[n - 1];
 
-        return dp[i] = max(op1, op2);
+        return dp[n] = max(op1, op2);
     }
 
 public:
     int rob(vector<int>& nums) {
         int n = nums.size();
-        dp.resize(n, -1);
+        dp.resize(n + 1, -1);
 
-        return rob(nums, n - 1);
+        return robbery(nums, n);
     }
 };
