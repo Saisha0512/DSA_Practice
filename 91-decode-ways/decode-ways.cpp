@@ -1,42 +1,42 @@
-// TOP - DOWN APPROACH : 
 class Solution {
     vector<int> dp;
+    // dp[i] = no of ways to decode string s of length i
 
-    int ways(string s, int i){
+    int decode(string s, int n){
         // base case
-        if (i < 0){ // successfully decoded the entire string
-            return 1; // we return 1 to mark one valid decoding way
+        if (n == 0){
+            return 1;
         }
 
         // check dp
-        if (dp[i] != -1){
-            return dp[i];
+        if (dp[n] != -1){
+            return dp[n];
         }
 
         // recursive case
-        // case 1 : evaluating the current character as a single digit num
+        // case 1 : using only the (n - 1)th character to decode as a single digit
         int op1 = 0;
-        if (s[i] != '0'){
-            op1 = ways(s, i - 1);
+        if (n - 1 >= 0 && s[n - 1] != '0'){
+            op1 = decode(s, n - 1);
         }
 
-        // case 2 : evaluating the current character as a 2 - digit num
-        int op2 = 0;
-        if (i - 1 >= 0){
-            int idx = stoi(s.substr(i - 1, 2));
-            if (idx >= 10 && idx <= 26){
-                op2 = ways(s, i - 2);
+        // case 2 : using last 2 characters of the string to decode only if valid
+        int op2 = 0;       
+        if (n - 2 >= 0 && s[n - 2] != '0'){
+            int num = stoi(s.substr(n - 2, 2));
+            if (num >= 10 && num <= 26){
+                op2 = decode(s, n - 2);
             }
         }
 
-        return dp[i] = op1 + op2;
+        return dp[n] = op1 + op2;
     }
 
 public:
     int numDecodings(string s) {
         int n = s.size();
-        dp.resize(n, -1);
+        dp.resize(n + 1, -1);
 
-        return ways(s, n - 1);
+        return decode(s, n);
     }
 };
