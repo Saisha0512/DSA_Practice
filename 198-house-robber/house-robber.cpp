@@ -1,6 +1,7 @@
 // TOP - DOWN APPROACH : 
 class Solution {
     vector<int> dp;
+    // dp[i] = maximum amount on robbering i houses
 
     int robbery(vector<int> &nums, int n){
         // base case
