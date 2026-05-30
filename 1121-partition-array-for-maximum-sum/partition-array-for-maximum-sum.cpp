@@ -21,7 +21,7 @@ class Solution {
         // iterating over all the possible values of k - ie. iterating over all the possible elements in the nearby of the current element, whose values can be changed to the current element
         // ie. we consider that one of the partition ends at the current index
         int tempans = INT_MIN;
-        for (int i = 1; i <= min(n, k); i ++){
+        for (int i = 1; i <= k && n - i >= 0; i ++){
             int currans = sum(arr, k, n - i);
 
             int maxel = *max_element(arr.begin() + n - i, arr.begin() + n);
