@@ -1,44 +1,39 @@
-// TOP - DOWN APPROACH : 
+// BOTTOM - UP APPROACH : 
 class Solution {
-    vector<int> dp;
-    // dp[i] = largst sum of given array using the first i numbers of the given array
-
-    int sum(vector<int> &arr, int k, int n){
-        // base case 
-        if (n == 0){
-            return 0;
-        }
-        if (n == 1){
-            return arr[n - 1];
-        }
-
-        // check dp
-        if (dp[n] != -1){
-            return dp[n];
-        }
-
-        // recursive case
-        // iterating over all the possible values of k - ie. iterating over all the possible elements in the nearby of the current element, whose values can be changed to the current element
-        // ie. we consider that one of the partition ends at the current index
-        int tempans = INT_MIN;
-        for (int i = 1; i <= k && n - i >= 0; i ++){
-            int currans = sum(arr, k, n - i);
-
-            int maxel = *max_element(arr.begin() + n - i, arr.begin() + n);
-            currans += (i * maxel);
-
-            tempans = max(tempans, currans);
-        }
-
-        return dp[n] = tempans;
-    }
-
 public:
     int maxSumAfterPartitioning(vector<int>& arr, int k) {
         int n = arr.size();
 
-        dp.resize(n + 1, -1);
-        
-        return sum(arr, k, n);
+        // calculating the prefix maximum
+        vector<int> premax(n);
+        premax[0] = arr[0];
+        for (int i = 1; i < n; i ++){
+            premax[i] = max(premax[i - 1], arr[i]);
+        }
+
+        // dp initialization
+        vector<int> dp(n + 1, -1);
+        dp[0] = 0;
+        dp[1] = arr[0];
+
+        // bottom up loop
+        for (int i = 2; i <= n; i ++){
+            int tempans = INT_MIN;
+
+            // considering all possible windows of size atmost k, ending at the current index
+            for (int j = 1; j <= k && i - j >= 0; j ++){
+                int currans = dp[i - j];
+
+                // changing all the elements in this window to the max element in that window
+                int maxel = *max_element(arr.begin() + i - j, arr.begin() + i);
+                currans += (j * maxel);
+
+                tempans = max(tempans, currans);
+            }
+
+            dp[i] = tempans;
+        }
+
+        return dp[n];
     }
 };
