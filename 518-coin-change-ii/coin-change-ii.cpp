@@ -1,7 +1,7 @@
 // TOP - DOWN APPROACH : 
 class Solution {
     vector<vector<int>> dp;
-    // dp[i][amt] = number of combinations that make up the sum = amt using the coins startig from the ith index in the coins array
+    // dp[i][amt] = no of combinations that make up the sum = amt using the coins starting from the ith index in the given array
 
     int coinChange(vector<int> &coins, int amt, int i){
         // base case
@@ -10,7 +10,7 @@ class Solution {
             return 1;
         }
         if (i == coins.size()){
-            // out of bound - not possible
+            // out of bounds - not possible
             return 0;
         }
 
@@ -20,23 +20,24 @@ class Solution {
         }
 
         // recursive case
-        int tempans = 0;
-        // iterating over all the coins that can be used at this current level - starting from the coin at the current index i (as we have infinite no of coins for the same denomination)
-        for (int j = i; j < coins.size(); j ++){
-            // only using the coin if the amount is greater than or equal to the coin
-            if (amt >= coins[j]){
-                tempans += coinChange(coins, amt - coins[j], j);
-            }
+        // case 1 : skip the current coin
+        int op1 = coinChange(coins, amt, i + 1);
+
+        // case 2 : take & add the current coin in the amount
+        int op2 = 0;
+        if (amt >= coins[i]){
+            // as we have infinite no of coins for every denomination, we can start from the same index in the next call
+            op2 = coinChange(coins, amt - coins[i], i);
         }
 
-        return dp[i][amt] = tempans;
+        return dp[i][amt] = op1 + op2;
     }
 
 public:
     int change(int amount, vector<int>& coins) {
         int n = coins.size();
 
-        // sorting the coins acc to the increasing order of their denominations
+        // sorting the coins in increasing order
         sort(coins.begin(), coins.end());
 
         // dp initialization
