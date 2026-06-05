@@ -11,6 +11,7 @@ public:
         // dp initialization
         int ans = 2;
         vector<unordered_map<int, int>> dp(n);
+        // dp[i][diff] = length of longest arithmetic subseq till the ith index with the difference between elements = diff
 
         // bottom up loop
         for (int i = 0; i < n; i ++){
