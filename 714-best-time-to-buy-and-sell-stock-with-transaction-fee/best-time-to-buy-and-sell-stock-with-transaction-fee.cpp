@@ -1,35 +1,32 @@
 class Solution {
     vector<vector<int>> dp;
+    // dp[i][j] = max profit that can be achieved if we start the from the ith index, with a boolean value j to determin the status of the last transaction made
+    // j = true -> we can now buy stocs and start a new transaction
+    // j = false -> we need to complete the previous transaction by selling the last bought stocks
 
-    // buy = 1 -> can buy
-    // buy = 0 -> currently holding a stock
-    int stocks(vector<int>& prices, int i, int buy, int fee) {
-
+    int stocks(vector<int> &prices, int i, bool buy, int fee){
         // base case
-        if (i == prices.size()) {
+        // last stock is sold
+        if (i == prices.size()){
             return 0;
         }
 
-        // memoization
-        if (dp[i][buy] != -1) {
+        // check dp
+        if (dp[i][buy] != -1){
             return dp[i][buy];
         }
 
-        // case 1 : perform the action
+        // recursive case
+        // case 1 : buying or selling the stocks at the current day
         int op1;
-
-        if (buy) {
-            // buy stock
-            op1 = -prices[i] +
-                  stocks(prices, i + 1, 0, fee);
+        if (buy == true){
+            op1 = -prices[i] + stocks(prices, i + 1, false, fee);
         }
         else {
-            // sell stock
-            op1 = prices[i] - fee +
-                  stocks(prices, i + 1, 1, fee);
+            op1 = prices[i] - fee + stocks(prices, i + 1, true, fee);
         }
 
-        // case 2 : skip current day
+        // case 2 : skip the current day
         int op2 = stocks(prices, i + 1, buy, fee);
 
         return dp[i][buy] = max(op1, op2);
@@ -37,11 +34,11 @@ class Solution {
 
 public:
     int maxProfit(vector<int>& prices, int fee) {
-
         int n = prices.size();
 
+        // dp intialization
         dp.resize(n, vector<int>(2, -1));
 
-        return stocks(prices, 0, 1, fee);
+        return stocks(prices, 0, true, fee);
     }
 };
