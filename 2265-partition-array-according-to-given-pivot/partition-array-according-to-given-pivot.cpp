@@ -1,25 +1,30 @@
 class Solution {
 public:
-    vector<int> pivotArray(vector<int>& nums, int pivot) {
-        vector<int> res(nums.size(), 0);
-        int l = 0, r = nums.size() - 1;
-        int i = 0, j = nums.size() - 1;
-        while (i < nums.size()){
-            if (nums[i] < pivot){
-                res[l] = nums[i];
-                l ++;
+    vector<int> pivotArray(vector<int>& nums, int p) {
+        int n = nums.size();
+
+        vector<int> res(n, 0);
+        int i = 0, j = n - 1; // pointers at nums
+        int l = 0, r = n - 1; // pointers at res
+        while (i < n && j >= 0){
+            // smaller element
+            if (nums[i] < p){
+                res[l ++] = nums[i];
             }
-            if (nums[j] > pivot){
-                res[r] = nums[j];
-                r --;
+            // greater element
+            if (nums[j] > p){
+                res[r --] = nums[j];
             }
+
             i ++;
             j --;
         }
+
+        // adding the elements equal to pivot in the middle of the array
         while (l <= r){
-            res[l] = pivot;
-            l ++;
+            res[l ++] = p;
         }
+
         return res;
     }
 };
