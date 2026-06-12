@@ -1,37 +1,42 @@
 class MinStack {
+    stack<int> s, mins;
+    // manintaining 2 stacks simultaneously - original stack & stack to track the minimum element with every new element that comes
 public:
-    stack<int> s1, s2;
     MinStack() {
+        
     }
     
-    void push(int val) {
-        s1.push(val);
-        if (!s2.empty() && val >= s2.top()){
-            s2.push(s2.top());
+    void push(int value) {
+        s.push(value);
+
+        // pushing the minimum value into the min-stack
+        if (!mins.empty()){ // non - empty stack
+            mins.push(min(value, mins.top()));
         }
-        else {
-            s2.push(val);
+        else { // empty stack
+            mins.push(value); // first element
         }
     }
     
     void pop() {
-        s1.pop();
-        s2.pop();
+        // popping both minimum & current stack simultaneously
+        mins.pop();
+        s.pop();
     }
     
     int top() {
-        return s1.top();
+        return s.top();
     }
     
     int getMin() {
-        return s2.top();
+        return mins.top();
     }
 };
 
 /**
  * Your MinStack object will be instantiated and called as such:
  * MinStack* obj = new MinStack();
- * obj->push(val);
+ * obj->push(value);
  * obj->pop();
  * int param_3 = obj->top();
  * int param_4 = obj->getMin();
