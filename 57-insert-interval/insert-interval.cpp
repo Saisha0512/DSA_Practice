@@ -1,33 +1,53 @@
 class Solution {
 public:
     vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        pq.push({newInterval[0], newInterval[1]});
+        // int newstart = newInterval[0], newend = newInterval[1];
+        intervals.push_back(newInterval); // adding the new interval
+        sort(intervals.begin(), intervals.end()); // sorting again
+        int n = intervals.size();
 
-        for (auto &i : intervals){
-            pq.push({i[0], i[1]});
-        }
+        // int start, end;
+        // vector<vector<int>> res;
+        // // if the new interval starts & ends before the first interval
+        // if (newend < intervals[0][0]){
+        //     res.push_back(newInterval);
+        //     res.insert(intervals.begin(), intervals.end(), res.end());
+        //     return res;
+        // }
+        // // if the new interval overlaps with the first interval
+        // else if (newstart >= intervals[0][0] || newend <= intervals[0][1]){
+        //     start = min(intervals[0][0], newstart);
+        //     end = max(intervals[0][1], newend);
+        // }
+        // // else we start merging the further intervals with the first interval
+        // else {
+        //     start = intervals[0][0];
+        //     end = intervals[0][1];
+        // }
 
+        int start = intervals[0][0], end = intervals[0][1];
+        // stack<int> last;
         vector<vector<int>> res;
+        res.push_back({start, end});
 
-        // Initializing the last interval encountered : 
-        auto [lastStart, lastEnd] = pq.top();
-        pq.pop();
+        // iterating over the intervals ahead
+        for (int i = 1; i < n; i ++){
+            int s = intervals[i][0], e = intervals[i][1];
 
-        while (!pq.empty()){
-            auto [start, end] = pq.top();
-            pq.pop();
-
-            if (start > lastEnd){
-                res.push_back({lastStart, lastEnd});
-                lastStart = start;
-                lastEnd = end;
+            // overlapping, hence merging the current interval with the last inserted interval
+            if (s <= end){
+                res.back()[0] = min(s, start);
+                res.back()[1] = max(e, end);
             }
-            else {
-                lastEnd = max(lastEnd, end);
+            // just adding this interval into res vector
+            else if (s > start){
+                res.push_back(intervals[i]);
             }
+
+            // updating the start & end of the last  inserted interval
+            start = res.back()[0];
+            end = res.back()[1];
         }
-        res.push_back({lastStart, lastEnd});
 
         return res;
     }
