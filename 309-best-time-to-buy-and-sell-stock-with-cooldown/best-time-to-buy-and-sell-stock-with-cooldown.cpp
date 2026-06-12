@@ -1,44 +1,34 @@
-// TOP - DOWN APPROACH : 
+// BOTTOM - UP APPROACH : 
 class Solution {
-    vector<vector<int>> dp;
-    // dp[i][j] = maximum profit starting from the ith day, where j tells the status of transaction
-    // j = 0 -> you can buy now
-    // j = 1 -> you can only sell or skip, as there is an ongoing transaction
-
-    int stocks(vector<int> &prices, int i, int j){
-        // base case
-        if (i >= prices.size()){
-            return 0;
-        }
-
-        // check dp
-        if (dp[i][j] != -1){
-            return dp[i][j];
-        }
-
-        // recursive case
-        // case 1 : skip the current day
-        int op1 = stocks(prices, i + 1, j);
-
-        // case 2 : buy or sell on the current day
-        int op2 = INT_MIN;
-        if (j == 0){ // buy
-            op2 = -prices[i] + stocks(prices, i + 1, 1);
-        }
-        else { // sell
-            op2 = +prices[i] + stocks(prices, i + 2, 0); // cooldown period of one day added
-        }
-
-        return dp[i][j] = max(op1, op2);
-    }
-
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        // dp intialization
-        dp.resize(n, vector<int>(2, -1));
+        // dp initialization
+        vector<vector<int>> dp(n + 2, vector<int>(2, 0));
+        // dp[i][j] = max profit starting from the ith day till the last day, where j tells the status of the transaction
+        // j == 0 -> ready to buy the stock
+        // j == 1 -> we can only sell the stock, ongoing transaction
 
-        return stocks(prices, 0, 0);
+        // bottom up loop
+        for (int i = n - 1; i >= 0; i --){
+            for (int j = 0; j < 2; j ++){
+                // case 1 : skip the current day
+                int op1 = dp[i + 1][j];
+
+                // case 2 : buy or sell stock on the current day
+                int op2 = INT_MIN;
+                if (j == 0){ // buy
+                    op2 = -prices[i] + dp[i + 1][1]; // ongoing transaction
+                }
+                else { // sell
+                    op2 = prices[i] + dp[i + 2][0]; // adding 1 for the cooldown period
+                }
+
+                dp[i][j] = max(op1, op2);
+            }
+        }
+
+        return dp[0][0];
     }
 };
