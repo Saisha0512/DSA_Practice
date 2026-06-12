@@ -1,4 +1,4 @@
-// BOTTOM - UP APPROACH : 
+// TOP - DOWN APPROACH : 
 class Solution {
     vector<vector<int>> dp;
     // dp[i][j] = maximum profit starting from the ith day, where j tells the status of transaction
