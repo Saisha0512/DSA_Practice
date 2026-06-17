@@ -1,6 +1,7 @@
 class Solution {
     vector<pair<int, int>> dirs = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
+    // same as finding cycle in undirected graph
     bool dfs_traversal(vector<vector<char>> &grid, vector<vector<bool>> &vis, int x, int y, pair<int, int> par){
         int n = grid.size(), m = grid[0].size();
 
@@ -20,7 +21,7 @@ class Solution {
             // if (curr_path.find({i, j}) != curr_path.end()){
             //     return true;
             // }
-            
+
             if (!vis[i][j]){
                 bool subprob = dfs_traversal(grid, vis, i, j, {x, y});
 
