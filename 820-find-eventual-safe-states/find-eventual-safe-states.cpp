@@ -1,50 +1,48 @@
 class Solution {
-    bool dfs(vector<vector<int>> &graph, vector<int> &vis, int node){
-        // Checking if the current node is terminal node : 
-        if (graph[node].size() == 0){
-            return true;
-        }
+    bool dfs_traversal(vector<vector<int>> &graph, vector<int> &status, int curr_node){
+        // visiting the current node
+        status[curr_node] = 1;
 
-        // Visiting the current node : 
-        vis[node] = 1;
+        // if the current is a safe node
+        // if (graph[curr_node].size() == 0){
+        //     return true;
+        // }
 
-        // Otherwise checking for all the paths from that node : 
-        for (int nbr : graph[node]){
-            // If the nbr is in the current path - Cycle Detected : 
-            if (vis[nbr] == 1){
+        // otherwise, iterate over the neighbours
+        for (int nbr : graph[curr_node]){
+            // cycle detected - not possible to reach safe node
+            if (status[nbr] == 1){
                 return false;
             }
-            // If the nbr is unvisited : 
-            if (vis[nbr] == 0){
-                bool subprob = dfs(graph, vis, nbr);
-                if (subprob == false){
+            else if (status[nbr] == 0){
+                bool subprob = dfs_traversal(graph, status, nbr);
+                // this traversal can't reach a terminal node
+                if (!subprob){
                     return false;
                 }
             }
         }
 
-        // Mark the current node visited : 
-        vis[node] = 2;
+        // all traversals of this node have reached the terminal node
+        status[curr_node] = 2;
         return true;
     }
+
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n = graph.size();
 
-        // Making the set of terminal nodes : 
-        set<int> terminal;
+        vector<int> status(n, 0);
         for (int i = 0; i < n; i ++){
-            if (graph[i].size() == 0){
-                terminal.insert(i);
+            if (status[i] == 0){
+                dfs_traversal(graph, status, i);
             }
         }
-
-        // Result Vector : 
+        
         vector<int> res;
-        vector<int> vis(n, 0);
+        // storing the nodes that have all traversals reaching a safe node
         for (int i = 0; i < n; i ++){
-            bool check = dfs(graph, vis, i);
-            if (check == true){
+            if (status[i] == 2){
                 res.push_back(i);
             }
         }
