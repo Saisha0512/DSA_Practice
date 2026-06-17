@@ -1,40 +1,42 @@
 class Solution {
 public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        unordered_set<string> s(wordList.begin(), wordList.end());
-        if (s.find(endWord) == s.end()){
-            return 0;
-        }
+    int ladderLength(string begin, string end, vector<string>& words) {
+        int n = words.size();
 
-        int steps = 1;
+        unordered_set<string> s(words.begin(), words.end());
         queue<string> q;
-        q.push(beginWord);
+        q.push(begin);
 
-        while(!q.empty()){
+        int len = 1; // no of words currently present in the chain
+        while (!q.empty()){
             int size = q.size();
             while (size --){
-                string curr = q.front();
+                string curr_word = q.front();
                 q.pop();
 
-                if (curr == endWord){
-                    return steps;
+                // if the end word is reached
+                if (curr_word == end){
+                    return len;
                 }
 
-                for (int i = 0; i < curr.size(); i ++){
-                    char org = curr[i];
+                // otheriwse we try replacing each character of the word with an alphabet
+                for (int i = 0; i < curr_word.size(); i ++){
+                    char org = curr_word[i];
                     for (char ch = 'a'; ch <= 'z'; ch ++){
-                        if (ch == org)  continue;
-                        curr[i] = ch;
-
-                        if (s.find(curr) != s.end()){
-                            q.push(curr);
-                            s.erase(curr);
+                        curr_word[i] = ch; // replacing
+                        
+                        // if this word exists in the words list
+                        if (s.find(curr_word) != s.end()){
+                            q.push(curr_word);
+                            s.erase(curr_word);
                         }
                     }
-                    curr[i] = org;
+
+                    curr_word[i] = org;
                 }
             }
-            steps ++;          
+
+            len ++;
         }
 
         return 0;
