@@ -1,20 +1,20 @@
 class Solution {
-    vector<vector<int>> res;
     vector<bool> vis;
+    vector<vector<int>> res;
 
     vector<int> dfs_traversal(vector<vector<int>> &graph, int curr){
-        // checking 
+        // base case
         if (vis[curr]){
             return res[curr];
         }
 
         unordered_set<int> ancestors;
-        
-        // we need to add all of its neighbours & nodes that can be reached if we start from the curr node
+        // iterating over all the neighbours
         for (int nbr : graph[curr]){
-            vector<int> temp = dfs_traversal(graph, nbr); // it contains the nodes that can be reached from the node nbr
+            vector<int> temp = dfs_traversal(graph, nbr); // ancestors of nbr
             ancestors.insert(nbr);
-            
+
+            // all the ancestors of nbr will also be the ancestors of curr
             for (int x : temp){
                 ancestors.insert(x);
             }
@@ -22,24 +22,28 @@ class Solution {
 
         res[curr] = vector<int>(ancestors.begin(), ancestors.end());
         sort(res[curr].begin(), res[curr].end());
+        // completely visited the current node
         vis[curr] = true;
+
         return res[curr];
     }
 
 public:
     vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
-        // constructing the graph, by reversing each edge
+        // constructing a reversed graph
         vector<vector<int>> graph(n);
         for (auto &e : edges){
             graph[e[1]].push_back(e[0]);
         }
 
-        // running dfs for each node & adding all the nodes that could be reached via it
-        res.resize(n);
         vis.resize(n, false);
-        // iterating over all the elements
+        res.resize(n);
+
+        // traversing every node to get its ancestors
         for (int i = 0; i < n; i ++){
-            dfs_traversal(graph, i);
+            if (!vis[i]){
+                dfs_traversal(graph, i);
+            }
         }
 
         return res;
