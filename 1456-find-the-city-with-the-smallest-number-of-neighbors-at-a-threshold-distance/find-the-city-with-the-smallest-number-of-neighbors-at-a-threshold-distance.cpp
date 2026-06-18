@@ -1,27 +1,27 @@
 class Solution {
-    int dijkstra(vector<vector<pair<int, int>>> &graph, int n, int curr_node, int threshold){
+    int dijkstra(vector<vector<pair<int, int>>> &graph, int n, int node, int threshold){
         // implementing dijkstra bfs loop starting from curr_node
         vector<int> dist(n, INT_MAX);
-        queue<int> q;
-        q.push(curr_node);
-        dist[curr_node] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.push({0, node});
+        dist[node] = 0;
 
         // bfs loop
-        while (!q.empty()){
-            int node = q.front();
-            q.pop();
+        while (!pq.empty()){
+            auto [curr_dist, curr_node] = pq.top();
+            pq.pop();
 
-            // if the dist exced the threshold
-            if (dist[node] > threshold){
+            // if the dist exceed the threshold
+            if (curr_dist > dist[curr_node] || curr_dist > threshold){
                 continue;
             }
 
             // iterating over the neighbors
-            for (auto &[nbr, wt] : graph[node]){
-                int new_dist = dist[node] + wt;
+            for (auto &[nbr, wt] : graph[curr_node]){
+                int new_dist = curr_dist + wt;
                 if (new_dist < dist[nbr]){
                     dist[nbr] = new_dist;
-                    q.push(nbr);
+                    pq.push({new_dist, nbr});
                 }
             }
         }
