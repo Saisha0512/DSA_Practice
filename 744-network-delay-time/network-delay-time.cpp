@@ -1,46 +1,39 @@
 class Solution {
 public:
-    int networkDelayTime(vector<vector<int>>& times, int n, int src) {
-        // Adjacency List : 
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        // constructing the graph
         vector<vector<pair<int, int>>> graph(n + 1);
-        for (auto &time : times){
-            int u = time[0], v = time[1], w = time[2];
-            graph[u].push_back({v, w});
+        for (auto &e : times){
+            graph[e[0]].push_back({e[1], e[2]});
         }
 
-        // Min - Heap for Dijkstra : 
-        vector<int> signal(n + 1, INT_MAX);
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // {Dist, Node}
-        signal[src] = 0;
-        pq.push({0, src});
+        vector<int> dist(n + 1, INT_MAX);
+        queue<int> q;
+        q.push(k);
+        dist[k] = 0;
 
-        while (!pq.empty()){
-            auto [nodeDist, node] = pq.top();
-            pq.pop();
+        while (!q.empty()){
+            int curr_node = q.front();
+            q.pop();
 
-            if (nodeDist != signal[node]){
-                continue; // The iteration for the smallest distance is already done earlier.
-            }
-
-            // Iterating over the current node's neighbours : 
-            for (auto &[nbr, wt] : graph[node]){
-                // Updating the distance of the nbr only if the below condition is satisfied : 
-                if (signal[nbr] > nodeDist + wt){
-                    signal[nbr] = nodeDist + wt;
-                    pq.push({signal[nbr], nbr});
+            // iterating over the neighbours of this node
+            for (auto &[nbr, wt] : graph[curr_node]){
+                int curr_time = dist[curr_node] + wt;
+                if (dist[nbr] > curr_time){
+                    dist[nbr] = curr_time;
+                    q.push(nbr);
                 }
             }
         }
 
-        // Checking if all the nodes receive the signal & finding out the minimum time it takes for all n nodes to receive the signal : 
-        int time = 0;
+        int max_time = INT_MIN;
         for (int i = 1; i <= n; i ++){
-            if (signal[i] == INT_MAX){
+            if (dist[i] == INT_MAX){ // unreachable node
                 return -1;
             }
-            time = max(time, signal[i]);
+            max_time = max(max_time, dist[i]);
         }
 
-        return time;
+        return max_time;
     }
 };
