@@ -1,42 +1,51 @@
 class Solution {
-public:
-    bool canFinish(int n, vector<vector<int>>& pre_req) {
-        // constructing the graph
-        vector<int> indegree(n, 0);
-        vector<vector<int>> graph(n);
-        for (auto &e : pre_req){
-            graph[e[1]].push_back(e[0]);
-            indegree[e[0]] ++;
-        }
+    vector<int> order;
 
-        // bfs approach
-        // pushing all the nodes with indegree 0 to the queue
-        queue<int> q;
-        for (int i = 0; i < n; i ++){
-            if (indegree[i] == 0){
-                q.push(i);
+    bool dfs_traversal(vector<vector<int>> &graph, vector<int> &status, int curr_node){
+        // visiting the current node
+        status[curr_node] = 1;
+
+        // iterating over its neighbors
+        for (int nbr : graph[curr_node]){
+            if (status[nbr] == 0){
+                bool subprob = dfs_traversal(graph, status, nbr);
+
+                if (!subprob){
+                    return false;
+                }
+            }
+            else if (status[nbr] == 1){
+                // cycle detected
+                return false;
             }
         }
 
-        // bfs loop
-        vector<int> order;
-        while (!q.empty()){
-            int curr_node = q.front();
-            q.pop();
+        // push the node in the order
+        order.push_back(curr_node);
+        status[curr_node] = 2;
+        return true;
+    }
 
-            // pushing this node in the order
-            order.push_back(curr_node);
+public:
+    bool canFinish(int n, vector<vector<int>>& pre_req) {
+        // constructing the graph
+        vector<vector<int>> graph(n);
+        for (auto &e : pre_req){
+            graph[e[1]].push_back(e[0]);
+        }
 
-            // iterating over its nieghbors & removing all its outgoing edges
-            for (int nbr : graph[curr_node]){
-                indegree[nbr] --;
+        // iterating over the bfs loop
+        vector<int> status(n, 0);
+        for (int i = 0; i < n; i ++){
+            if (status[i] == 0){
+                bool subprob = dfs_traversal(graph, status, i);
 
-                if (indegree[nbr] == 0){
-                    q.push(nbr);
+                if (!subprob){
+                    return false;
                 }
             }
         }
 
-        return (order.size() == n);
+        return true;
     }
 };
