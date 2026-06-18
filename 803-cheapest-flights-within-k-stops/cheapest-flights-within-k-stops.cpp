@@ -1,37 +1,40 @@
 class Solution {
 public:
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        // Adjacency List : 
+        // constructing the adjacency list of the graph
         vector<vector<pair<int, int>>> graph(n);
-        for (int i = 0; i < flights.size(); i ++){
-            int from = flights[i][0], to = flights[i][1], price = flights[i][2];
+        for (auto fl : flights){
+            int from = fl[0], to = fl[1], price = fl[2];
             graph[from].push_back({to, price});
         }
 
-        queue<vector<int>> q; // {Node, Price, Stops}
-        q.push({src, 0, 0}); // Pushing the source
-        vector<int> dist(n, INT_MAX); // To store the cheapest price for every node
+        queue<vector<int>> q; // {nodes, price, stops}
+        q.push({src, 0, 0});
+        vector<int> dist(n, INT_MAX); // to store the cheapest price to reach every node
         dist[src] = 0;
+
+        // bfs loop
         while (!q.empty()){
             auto curr = q.front();
             q.pop();
-            int node = curr[0], nodePrice = curr[1], nodeStops = curr[2];
+            int curr_node = curr[0], price = curr[1], stops = curr[2];
 
-            if (nodeStops > k){
+            // if the stops is more than the limit
+            if (stops > k){
                 continue;
             }
 
-            for (auto [nbr, wt] : graph[node]){
-                // Updating the nbr only if the price in the current price is cheaper & the stops in the current path <= k : 
-                if (dist[nbr] > nodePrice + wt && nodeStops <= k){
-                    dist[nbr] = nodePrice + wt; // Updating the distance vector
-                    q.push({nbr, dist[nbr], nodeStops + 1}); // Pushing nbr, new price & new no of stops into the queue
+            // updating the neighbors
+            for (auto &[nbr, wt] : graph[curr_node]){
+                if (stops <= k && dist[nbr] > price + wt){
+                    dist[nbr] = price + wt;
+                    q.push({nbr, dist[nbr], stops + 1});
                 }
             }
         }
 
         if (dist[dst] == INT_MAX){
-            return -1; // No possible route 
+            return -1;
         }
         return dist[dst];
     }
