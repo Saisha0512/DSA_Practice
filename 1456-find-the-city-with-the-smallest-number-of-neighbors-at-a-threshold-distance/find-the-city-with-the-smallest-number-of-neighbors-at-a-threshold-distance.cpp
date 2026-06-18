@@ -1,57 +1,60 @@
 class Solution {
-    void dijkstra(vector<vector<pair<int, int>>> &graph, vector<int> &res, int src, int threshold, int n){
-        int cnt = 0;
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // {Dist, Node}
+    int dijkstra(vector<vector<pair<int, int>>> &graph, int n, int curr_node, int threshold){
+        // implementing dijkstra bfs loop starting from curr_node
         vector<int> dist(n, INT_MAX);
-        pq.push({0, src});
-        dist[src] = 0;
+        queue<int> q;
+        q.push(curr_node);
+        dist[curr_node] = 0;
 
-        while (!pq.empty()){
-            auto [nodeDist, node] = pq.top();
-            pq.pop();
+        // bfs loop
+        while (!q.empty()){
+            int node = q.front();
+            q.pop();
 
-            // Checking if the nodeDistance is more than threshold : 
-            if (nodeDist > threshold || nodeDist > dist[node]){
+            // if the dist exced the threshold
+            if (dist[node] > threshold){
                 continue;
             }
-            else {
-                cnt ++; // src will be counted as extra here, so we would need to subtract 1 in the final ans
-            }
 
-            // Iterating over all the nbrs : 
+            // iterating over the neighbors
             for (auto &[nbr, wt] : graph[node]){
-                // Updating the node's shortest distance only iff the following condition is satisfied : 
-                if (dist[nbr] > nodeDist + wt){
-                    dist[nbr] = nodeDist + wt;
-                    pq.push({dist[nbr], nbr});
+                int new_dist = dist[node] + wt;
+                if (new_dist < dist[nbr]){
+                    dist[nbr] = new_dist;
+                    q.push(nbr);
                 }
             }
         }
 
-        res[src] = cnt - 1; // Updating the resultant vector
+        // counting the no of nodes within the threshold
+        int cnt = 0;
+        for (int i = 0; i < n; i ++){
+            if (dist[i] <= threshold){
+                cnt ++;
+            }
+        }
+
+        return cnt - 1; // avoid counting the curr_node itself
     }
 
 public:
     int findTheCity(int n, vector<vector<int>>& edges, int threshold) {
-        // Adjacency Graph : 
+        // construcitng the adjacency list of the graph
         vector<vector<pair<int, int>>> graph(n);
-        for(auto &edge : edges){
-            int u = edge[0], v = edge[1], w = edge[2];
-            graph[u].push_back({v, w});
-            graph[v].push_back({u, w}); // Bi - directional
+        for (auto &e : edges){
+            graph[e[0]].push_back({e[1], e[2]});
+            graph[e[1]].push_back({e[0], e[2]});
         }
 
-        vector<int> res(n, INT_MAX);
+        int max_reachable = INT_MAX, city = 0;
         for (int i = 0; i < n; i ++){
-            // Implementing dijkstra for each node as the source & counting the number cities that can be reached upto the threshold distance if started from that particular city : 
-            dijkstra(graph, res, i, threshold, n);
-        }
-
-        // Iterating over the resultant vector : 
-        int minCities = INT_MAX, city = -1;
-        for (int i = 0; i < n; i ++){
-            if (res[i] <= minCities){
-                minCities = res[i];
+            int reachable_cities = dijkstra(graph, n, i, threshold);
+            
+            if (reachable_cities < max_reachable){
+                max_reachable = reachable_cities;
+                city = i;
+            }
+            else if (reachable_cities == max_reachable){
                 city = i;
             }
         }
