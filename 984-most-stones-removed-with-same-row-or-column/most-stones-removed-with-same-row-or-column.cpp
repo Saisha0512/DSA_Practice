@@ -1,14 +1,12 @@
 class Solution {
-    // DFS Function to get the number of connected components : 
-    void dfs(vector<vector<int>> &stones, vector<bool> &vis, int curr, int n){
-        // Visiting the current stone : 
-        vis[curr] = true;
+    void dfs_traversal(vector<vector<int>> &stones, int curr_stone, vector<bool> &vis){
+        // marking the current stone as visited
+        vis[curr_stone] = true;
 
-        // Visiting the neighbours of the current stone : 
-        for (int nbr = 0; nbr < n; nbr ++){
-            // If this stone shares x or y coordinate with the current stone & it is yet to be visited, then we implement dfs on it : 
-            if (!vis[nbr] && (stones[curr][0] == stones[nbr][0] || stones[curr][1] == stones[nbr][1])){
-                dfs(stones, vis, nbr, n);
+        // iterating over the neighbors
+        for (int nbr = 0; nbr < stones.size(); nbr ++){
+            if (!vis[nbr] && nbr != curr_stone && (stones[nbr][0] == stones[curr_stone][0] || stones[nbr][1] == stones[curr_stone][1])){
+                dfs_traversal(stones, nbr, vis);
             }
         }
     }
@@ -16,16 +14,17 @@ class Solution {
 public:
     int removeStones(vector<vector<int>>& stones) {
         int n = stones.size();
+
+        int comp_cnt = 0;
         vector<bool> vis(n, false);
-        int cnt = 0;
-        // Iterating all the stones & performing dfs on each to count the number of connected components :
+        // counting the number of disconnected components
         for (int i = 0; i < n; i ++){
             if (!vis[i]){
-                cnt ++;
-                dfs(stones, vis, i, n);
+                dfs_traversal(stones, i, vis);
+                comp_cnt ++;
             }
         }
 
-        return n - cnt;
+        return n - comp_cnt;
     }
 };
