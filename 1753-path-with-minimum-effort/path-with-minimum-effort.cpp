@@ -2,33 +2,40 @@ class Solution {
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
         int n = heights.size(), m = heights[0].size();
-        
-        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq; // Min - Heap
-        vector<vector<bool>> vis(n, vector<bool>(m, false));
-        pq.push({0, {0, 0}});
-        int maxeffort = 0;
+        vector<pair<int, int>> dirs = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
-        vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        while (!pq.empty()){
-            auto curr = pq.top();
-            pq.pop();
-            int effort = curr.first, x = curr.second.first, y = curr.second.second;
-            
-            maxeffort = max(maxeffort, effort);
+        vector<vector<int>> effort(n, vector<int> (m, INT_MAX));
+        queue<pair<int, int>> q; // {x, y}
+        q.push({0, 0});
+        effort[0][0] = 0;
+        
+        while (!q.empty()){
+            auto [x, y] = q.front();
+            q.pop();
+            int curr_eff = effort[x][y];
+
+            // reached the destination
             if (x == n - 1 && y == m - 1){
-                return maxeffort;
+                continue;
             }
 
-            vis[x][y] = true;
-            for (auto [dx, dy] : dirs){
+            // checking the effort to reach the neighbors from the current cell
+            for (auto &[dx, dy] : dirs){
                 int i = x + dx, j = y + dy;
-                if (i >= 0 && j >= 0 && i < n && j < m && !vis[i][j]){
-                    int neweff = abs(heights[i][j] - heights[x][y]);
-                    pq.push({neweff, {i, j}});
+
+                // out of boundary
+                if (i < 0 || j < 0 || i >= n || j >= m){
+                    continue;
+                }
+
+                int new_eff = max(curr_eff, abs(heights[x][y] - heights[i][j]));
+                if (new_eff < effort[i][j]){
+                    effort[i][j] = new_eff;
+                    q.push({i, j});
                 }
             }
         }
-        
-        return maxeffort;
+
+        return effort[n - 1][m - 1];
     }
 };
