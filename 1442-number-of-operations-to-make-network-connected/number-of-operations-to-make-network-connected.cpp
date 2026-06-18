@@ -1,41 +1,42 @@
 class Solution {
-    void dfs(int node, vector<vector<int>> &graph, vector<bool> &vis){
-        vis[node] = true;
+    int dfs_traversal(vector<vector<int>> &graph, vector<bool> &vis, int curr_node){
+        // visting the current node
+        vis[curr_node] = true;
 
-        // Visiting the neighbours : 
-        for (auto nbr : graph[node]){
+        int curr_cnt = 1;
+        // iterating over the neighbors
+        for (int nbr : graph[curr_node]){
             if (!vis[nbr]){
-                dfs(nbr, graph, vis);
+                curr_cnt += dfs_traversal(graph, vis, nbr);
             }
         }
+
+        return curr_cnt;
     }
 
 public:
     int makeConnected(int n, vector<vector<int>>& connections) {
-        // If we have less no of cables : 
-        if (connections.size() < n - 1){
-            return -1;
-        }
-
-        // Adjacency List : 
+        // constructing the graph
         vector<vector<int>> graph(n);
-        for (auto &conn : connections){
-            int a = conn[0], b = conn[1];
-
-            graph[a].push_back(b);
-            graph[b].push_back(a);
+        for (auto &e : connections){
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
         }
 
-        // Counting the number of components :
-        int comp = 0;
-        vector<bool> vis(n, false); // Visiting Vector : 
+        // counting the number of disconnected components
+        int comp_cnt = 0;
+        int edges_needed = 0;
+        vector<bool> vis(n, false);
         for (int i = 0; i < n; i ++){
             if (!vis[i]){
-                dfs(i, graph, vis);
-                comp ++;
+                int curr_cnt = dfs_traversal(graph, vis, i);
+                edges_needed += curr_cnt - 1;
+                comp_cnt ++;
             }
         }
 
-        return comp - 1;
+        int edges_present = connections.size();
+        int extras = edges_present - edges_needed; // extra edges which can be used to connect the components
+        return (extras >= comp_cnt - 1)? comp_cnt - 1 : -1;
     }
 };
