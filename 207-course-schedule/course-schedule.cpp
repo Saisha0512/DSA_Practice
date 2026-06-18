@@ -1,48 +1,42 @@
-// DFS APPROACH : 
 class Solution {
-    bool dfs(vector<vector<int>> &graph, int node, vector<int> &state){
-        // Visiting the current node : 
-        state[node] = 1;
-
-        // Iterating all over the neighbors of the current node : 
-        for (auto nbr : graph[node]){
-            // Cycle detected : 
-            if (state[nbr] == 1){
-                return false;
-            }
-
-            // If the current nbr is not visited, then we visit it : 
-            if (state[nbr] == 0){
-                if (!dfs(graph, nbr, state)){
-                    return false; // Cycle Detected
-                }
-            }
-        }
-
-        // Marking the current node as visited : 
-        state[node] = 2;
-        return true;
-    }
-
 public:
-    bool canFinish(int n, vector<vector<int>>& pre) {
-        // Constructing the Adjacency List of the Graph : 
+    bool canFinish(int n, vector<vector<int>>& pre_req) {
+        // constructing the graph
+        vector<int> indegree(n, 0);
         vector<vector<int>> graph(n);
-        for (auto &e : pre){
-            int a = e[0], b = e[1];
-
-            graph[b].push_back(a);
+        for (auto &e : pre_req){
+            graph[e[1]].push_back(e[0]);
+            indegree[e[0]] ++;
         }
 
-        vector<int> state(n, 0);
+        // bfs approach
+        // pushing all the nodes with indegree 0 to the queue
+        queue<int> q;
         for (int i = 0; i < n; i ++){
-            if (state[i] == 0){
-                if (!dfs(graph, i, state)){
-                    return false;
+            if (indegree[i] == 0){
+                q.push(i);
+            }
+        }
+
+        // bfs loop
+        vector<int> order;
+        while (!q.empty()){
+            int curr_node = q.front();
+            q.pop();
+
+            // pushing this node in the order
+            order.push_back(curr_node);
+
+            // iterating over its nieghbors & removing all its outgoing edges
+            for (int nbr : graph[curr_node]){
+                indegree[nbr] --;
+
+                if (indegree[nbr] == 0){
+                    q.push(nbr);
                 }
             }
         }
 
-        return true;
+        return (order.size() == n);
     }
 };
