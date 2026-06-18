@@ -1,43 +1,41 @@
 class Solution {
+    const int mod = 1e9 + 7;
 public:
     int countPaths(int n, vector<vector<int>>& roads) {
-        int mod = 1e9 + 7;
-        // Adjacency List of the graph : 
+        // constructing the graph
         vector<vector<pair<int, int>>> graph(n);
-        for (auto &path : roads){
-            int u = path[0], v = path[1], t = path[2];
-            graph[u].push_back({v, t});
-            graph[v].push_back({u, t});
+        for (auto &r : roads){
+            graph[r[0]].push_back({r[1], r[2]});
+            graph[r[1]].push_back({r[0], r[2]});
         }
 
-        vector<long long> ways(n, 0); // To store the no of ways for each node
-        vector<long long> time(n, LLONG_MAX); // To store minimum dist for each node
-        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq; // Min - Heap
-        time[0] = 0;
-        ways[0] = 1;
+        vector<long long> ways(n, 0);
+        vector<long long> dist(n, LLONG_MAX);
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
         pq.push({0, 0});
-        // Iterating over the priority queue : 
-        while (!pq.empty()){
-            auto [nodeTime, node] = pq.top();
-            pq.pop();
+        dist[0] = 0;
+        ways[0] = 1;
 
-            if (nodeTime > time[node]){ // If the current nodeTime is greater than the minimum time encountered till now, then we just ignore it
+        // bfs loop
+        while (!pq.empty()){
+            auto [curr_dist, curr_node] = pq.top();
+            pq.pop();
+            
+            // invalid case
+            if (curr_dist > dist[curr_node]){
                 continue;
             }
 
-            // Iterating over the neighbours of the current node : 
-            for (auto &[nbr, wt] : graph[node]){
-                long long newTime = nodeTime + wt;
-                // If the current time is equal to the minimum time encountered till now : 
-                if (newTime == time[nbr]){
-                    ways[nbr] = (ways[nbr] + ways[node]) % mod;
+            // iterating over the neighbors
+            for (auto &[nbr, wt] : graph[curr_node]){
+                long long new_dist = curr_dist + wt;
+                if (dist[nbr] > new_dist){
+                    dist[nbr] = new_dist;
+                    ways[nbr] = ways[curr_node];
+                    pq.push({dist[nbr], nbr});
                 }
-
-                // If we find a new minimum time to reach this nbr : 
-                if (newTime < time[nbr]){
-                    time[nbr] = newTime;
-                    ways[nbr] = ways[node];
-                    pq.push({time[nbr], nbr});
+                else if (new_dist == dist[nbr]){
+                    ways[nbr] = (ways[nbr] + ways[curr_node]) % mod;
                 }
             }
         }
