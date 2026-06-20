@@ -14,7 +14,7 @@ class Solution {
     pair<int, int> check(TreeNode *root){
         // base case
         if (root == NULL){
-            return {0, INT_MIN};
+            return {INT_MIN, INT_MIN};
         }
 
         // recursive case
