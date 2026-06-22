@@ -14,9 +14,6 @@ public:
                 even += 2;
                 odd += 2;
             }
-            else {
-                break;
-            }
         }
 
         return nums;
