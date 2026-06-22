@@ -3,23 +3,24 @@ public:
     vector<int> pivotArray(vector<int>& nums, int pivot) {
         int n = nums.size();
         int l = 0, r = n - 1;
+        int i = 0, j = n - 1;
         vector<int> res(n, -1);
 
-        // adding all the elements less than pivot in the start
-        for (int i = 0; i < n; i ++){
+        while (i < n){
+            // elements smaller than the picot in the start of the array
             if (nums[i] < pivot){
                 res[l ++] = nums[i];
             }
-        }
 
-        // adding all the elements greater than pivot in the end
-        for (int j = n - 1; j >= 0; j --){
+            // elements greater than the pivot in the end of the array
             if (nums[j] > pivot){
                 res[r --] = nums[j];
             }
+
+            i ++; j --;
         }
 
-        // filling all the intermediate empty positions with pivot
+        // filling the intermediate positions with pivot
         while (l <= r){
             res[l ++] = pivot;
         }
