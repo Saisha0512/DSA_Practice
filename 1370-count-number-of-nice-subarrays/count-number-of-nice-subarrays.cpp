@@ -1,24 +1,25 @@
 class Solution {
-public:
-    int numberOfSubarrays(vector<int>& nums, int k) {
+    int atMostKOdd(vector<int> &nums, int k){
         int n = nums.size();
+        int left = 0, odd = 0, cnt = 0;
 
-        int cnt = 0;
-        int preodd = 0;
-        unordered_map<int, int> m;
-        for (int num : nums){
-            preodd += (num % 2)? 1 : 0;
+        for (int right = 0; right < n; right ++){
+            // expanding the window
+            odd += (nums[right] % 2);
 
-            if (preodd == k){
-                cnt ++;
+            // contracting the window
+            while (odd > k){
+                odd -= (nums[left] % 2);
+                left ++;
             }
 
-            if (m.find(preodd - k) != m.end()){
-                cnt += m[preodd - k];
-            }
-            m[preodd] ++;
+            cnt += (right - left + 1); // adding the number of subarrays with atmost k odd nos in it
         }
 
         return cnt;
+    }
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        return atMostKOdd(nums, k) - atMostKOdd(nums, k - 1);
     }
 };
