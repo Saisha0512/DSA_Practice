@@ -42,7 +42,7 @@ public:
                     }
 
                     // case 2 : if obstacle is present at this nbr
-                    if (obs > 0 && !vis[i][j][obs - 1]){
+                    if (grid[i][j] == 1 && obs > 0 && !vis[i][j][obs - 1]){
                         q.push({i, j, obs - 1});
                         vis[i][j][obs - 1] = true;
                     }
