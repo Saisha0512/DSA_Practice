@@ -2,18 +2,17 @@ class Solution {
 public:
     vector<int> findDuplicates(vector<int>& nums) {
         int n = nums.size();
-
-        // counting the frequency of each element
-        vector<int> freq(n + 1, 0);
-        for (int num : nums){
-            freq[num] ++;
-        }
-
-        // checking for the elements that appear twice
         vector<int> res;
-        for (int i = 0; i <= n; i ++){
-            if (freq[i] == 2){
-                res.push_back(i);
+
+        for (int i = 0; i < n; i ++){
+            int idx = abs(nums[i]);
+
+            if (nums[idx - 1] < 0){
+                res.push_back(idx);
+            }
+            else {
+                // we mark the idx = abs(nums[i]) number as visited by negating the number present at idx - 1 index
+                nums[idx - 1] *= -1;
             }
         }
 
