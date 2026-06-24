@@ -1,34 +1,36 @@
 class Solution {
-    bool isSubseq(string subseq, string word){
-        int n = subseq.size(), m = word.size();
-        int i = 0;
-        for (int j = 0; j < m; j ++){
-            if (word[j] == subseq[i]){
-                i ++;
-            }
-        }
-
-        return (i == n);
-    }
-
 public:
     int numMatchingSubseq(string s, vector<string>& words) {
         int cnt = 0;
+        unordered_map<char, queue<pair<string, int>>> mp;
 
-        unordered_map<string, bool> mp;
+        // pushign the word in the queue of the first character
         for (auto &word : words){
-            // if the current word is present in the map
-            if (mp.find(word) != mp.end()){
-                if (mp[word]){
-                    cnt += 1;
+            mp[word[0]].push({word, 0});
+        }
+
+        // iterating over the given string to cater to characters in the given subseq order
+        for (char ch : s){
+            auto &q = mp[ch];
+            int size = q.size();
+
+            // iterating over the currently present elements in the queue
+            while (size --){
+                auto [word, idx] = q.front();
+                q.pop();
+
+                // moving to the next character in the word
+                idx ++;
+
+                // if the pointer has reached the end, then this is the subseq of s
+                if (idx == word.size()){
+                    cnt ++;
                 }
-
-                continue;
+                else {
+                    // otherwise, we push the current word to the queue of the next character
+                    mp[word[idx]].push({word, idx});
+                }
             }
-
-            // otherwise, we check if this word is subseq of s
-            mp[word] = isSubseq(word, s);
-            cnt += mp[word];
         }
 
         return cnt;
