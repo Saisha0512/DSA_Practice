@@ -1,6 +1,6 @@
 class Solution {
     const int mod = 1e9 + 7;
-    
+
 public:
     int checkRecord(int n) {
         // dp initialization
@@ -13,7 +13,7 @@ public:
         }
 
 
-        // dp[i][j][k] = no of possible attendance records of length i, with absent days == j && consecutive ongoing late days == k
+        // dp[i][j][k] = no of possible attendance records of length i, such that no of As used till now == j && no of consecutive L in the end of the ongoing record == k
 
         for (int i = 1; i <= n; i ++){
             for (int j = 0; j < 2; j ++){
