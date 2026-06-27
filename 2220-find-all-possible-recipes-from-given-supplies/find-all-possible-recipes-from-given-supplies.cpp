@@ -7,8 +7,8 @@ class Solution {
         if (state[curr] == 1){
             return false;
         }
-        if (state[curr] == 2){
-            return (supp.count(recipes[curr]));
+        if (state[curr] == 2){ // already processed
+            return (supp.count(recipes[curr])); // check if it was makeable
         }
 
         // visiting the current recipe
@@ -22,7 +22,6 @@ class Solution {
             }
             // if its a recipe
             else if (idx.find(i) != idx.end()){
-                // unvisited recipe
                 bool subprob = dfs_traversal(recipes, ingredients, idx, state, idx[i]);
 
                 if (!subprob){
