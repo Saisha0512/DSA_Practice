@@ -4,21 +4,21 @@ public:
         int n = nums.size();
         vector<int> left(n, 1), right(n, 1);
 
-        // Calculating the left prefix product : 
+        // taking prefix product from left to right
         for (int i = 1; i < n; i ++){
-            left[i] = (left[i - 1] * nums[i - 1]);
+            left[i] = left[i - 1] * nums[i - 1];
         }
 
-        // Calculating the right prefix product : 
+        // taking suffix product from right to left
         for (int i = n - 2; i >= 0; i --){
-            right[i] = (right[i + 1] * nums[i + 1]);
+            right[i] = right[i + 1] * nums[i + 1];
         }
 
-        // Calculating the ans vector : 
+        vector<int> res(n, 1);
         for (int i = 0; i < n; i ++){
-            left[i] *= right[i];
+            res[i] = left[i] * right[i];
         }
 
-        return left;
+        return res;
     }
 };
