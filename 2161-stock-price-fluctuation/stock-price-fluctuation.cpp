@@ -1,38 +1,36 @@
 class StockPrice {
-    map<int, int> records; // {timestamp, price}
-    map<int, int> freq; // {price, freq}
+    int max_time;
+    multiset<int> prices;
+    unordered_map<int, int> records;
 
 public:
-    StockPrice() {}
+    StockPrice() {
+        max_time = 0;
+    }
     
     void update(int timestamp, int price) {
-        // if the timestamp already exists
+        // if the timestamp is already present
         if (records.count(timestamp)){
-            int old_price = records[timestamp];
-            freq[old_price] --;
-
-            if (freq[old_price] == 0){
-                freq.erase(old_price);
-            }
+            // removing this old price from the multiset
+            auto it = prices.find(records[timestamp]);
+            prices.erase(it);
         }
 
+        max_time = max(max_time, timestamp);
         records[timestamp] = price;
-        freq[price] ++;
+        prices.insert(price);
     }
     
     int current() {
-        auto it = records.rbegin();
-        return it -> second;
+        return records[max_time];
     }
     
     int maximum() {
-        auto it = freq.rbegin();
-        return it -> first;
+        return *prices.rbegin();
     }
     
     int minimum() {
-        auto it = freq.begin();
-        return it -> first;
+        return *prices.begin();
     }
 };
 
