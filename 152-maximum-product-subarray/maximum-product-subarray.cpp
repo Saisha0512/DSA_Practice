@@ -2,22 +2,18 @@ class Solution {
 public:
     int maxProduct(vector<int>& nums) {
         int n = nums.size();
-        
-        int currmax = nums[0], currmin = nums[0], maxprod = nums[0];
+
+        int curr_min = nums[0], curr_max = nums[0], max_prod = nums[0];
         for (int i = 1; i < n; i ++){
             if (nums[i] < 0){
-                swap(currmax, currmin);
+                swap(curr_min, curr_max);
             }
 
-            // Because on multiplying with a negative number : 
-            // - currmin can become currmax
-            // - currmax can become currmin
-
-            currmax = max(nums[i], currmax*nums[i]);
-            currmin = min(nums[i], currmin*nums[i]);
-            maxprod = max(maxprod, currmax);
+            curr_min = min(nums[i], curr_min * nums[i]);
+            curr_max = max(nums[i], curr_max * nums[i]);
+            max_prod = max(max_prod, curr_max);
         }
 
-        return maxprod;
+        return max_prod;
     }
 };
