@@ -1,49 +1,48 @@
 class Solution {
-    vector<bool> vis;
-    vector<vector<int>> res;
-
-    vector<int> dfs_traversal(vector<vector<int>> &graph, int curr){
-        // base case
-        if (vis[curr]){
-            return res[curr];
-        }
-
-        unordered_set<int> ancestors;
-        // iterating over all the neighbours
-        for (int nbr : graph[curr]){
-            vector<int> temp = dfs_traversal(graph, nbr); // ancestors of nbr
-            ancestors.insert(nbr);
-
-            // all the ancestors of nbr will also be the ancestors of curr
-            for (int x : temp){
-                ancestors.insert(x);
-            }
-        }
-
-        res[curr] = vector<int>(ancestors.begin(), ancestors.end());
-        sort(res[curr].begin(), res[curr].end());
-        // completely visited the current node
-        vis[curr] = true;
-
-        return res[curr];
-    }
-
 public:
     vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
-        // constructing a reversed graph
         vector<vector<int>> graph(n);
+        vector<int> indegree(n, 0);
         for (auto &e : edges){
-            graph[e[1]].push_back(e[0]);
+            graph[e[0]].push_back(e[1]);
+
+            indegree[e[1]] ++;
         }
 
-        vis.resize(n, false);
-        res.resize(n);
-
-        // traversing every node to get its ancestors
+        queue<int> q;
         for (int i = 0; i < n; i ++){
-            if (!vis[i]){
-                dfs_traversal(graph, i);
+            if (indegree[i] == 0){
+                q.push(i);
             }
+        }
+
+        
+        vector<unordered_set<int>> anc(n);
+        while (!q.empty()){
+            auto curr_node = q.front();
+            q.pop();
+
+            for (auto nbr : graph[curr_node]){
+                // inserting the curr_node & ancestors of curr_node 
+                anc[nbr].insert(curr_node);
+                for (auto el : anc[curr_node]){
+                    anc[nbr].insert(el);
+                }
+
+                indegree[nbr] --;
+                if (indegree[nbr] == 0){
+                    q.push(nbr);
+                }
+            }
+        }
+
+        vector<vector<int>> res(n);
+        for (int i = 0; i < n; i ++){
+            for (int x : anc[i]){
+                res[i].push_back(x);
+            }
+
+            sort(res[i].begin(), res[i].end());
         }
 
         return res;
