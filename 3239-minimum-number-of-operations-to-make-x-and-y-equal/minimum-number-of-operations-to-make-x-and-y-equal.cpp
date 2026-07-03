@@ -1,40 +1,54 @@
 class Solution {
 public:
     int minimumOperationsToMakeEqual(int x, int y) {
-        vector<int> dist(10001, -1);
-        queue<int> q;
+        // base case
+        if (x <= y){
+            return y - x;
+        }
 
+        vector<bool> vis(10001, false);
+        queue<int> q;
         q.push(x);
-        dist[x] = 0;
+        vis[x] = true;
+        int steps = 0;
 
         while (!q.empty()){
-            int curr = q.front();
-            q.pop();
+            int size = q.size();
 
-            if (curr == y){
-                return dist[curr];
+            while (size --){
+                int curr = q.front();
+                q.pop();
+
+                if (curr == y){
+                    return steps;
+                }
+
+                if (curr % 11 == 0){
+                    int next = curr / 11;
+                    if (!vis[next]){
+                        q.push(next);
+                        vis[next] = true;
+                    }
+                }
+                if (curr % 5 == 0){
+                    int next = curr / 5;
+                    if (!vis[next]){
+                        q.push(next);
+                        vis[next] = true;
+                    }
+                }
+
+                if (curr > 0 && !vis[curr - 1]){
+                    q.push(curr - 1);
+                    vis[curr - 1] == true;
+                }
+                if (curr + 1 <= 10000 && !vis[curr + 1]){
+                    q.push(curr + 1);
+                    vis[curr + 1] = true;
+                }
             }
 
-            // Operation 1 :
-            if (curr % 11 == 0 && dist[curr / 11] == -1){
-                dist[curr/11] = dist[curr] + 1;
-                q.push(curr/11);
-            }
-            // Operation - 2 : 
-            if (curr % 5 == 0 && dist[curr / 5] == -1){
-                dist[curr/5] = dist[curr] + 1;
-                q.push(curr/5);
-            }
-            // Operation - 3 : 
-            if (curr - 1 >= 0 && dist[curr - 1] == -1){
-                dist[curr - 1] = dist[curr] + 1;
-                q.push(curr - 1);
-            }
-            // Operation - 4 : 
-            if (curr + 1 <= 10000 && dist[curr + 1] == -1){
-                dist[curr + 1] = dist[curr] + 1;
-                q.push(curr + 1);
-            }
+            steps ++;
         }
 
         return -1;
