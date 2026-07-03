@@ -20,29 +20,27 @@ public:
 */
 
 class Solution {
-    unordered_map<Node*, Node*> mp;
-
+    unordered_map<Node*, Node*> mp; // {original node, deep copy}
 public:
     Node* cloneGraph(Node* node) {
-        // base case
-        if (node == NULL){
+        if (!node){
             return node;
         }
 
-        // checking if the node was already made
+        // if the current node was already created
         if (mp.find(node) != mp.end()){
             return mp[node];
         }
 
-        // recursive case
-        // creating the new node of the current node
-        Node *newnode = new Node(node -> val);
-        mp[node] = newnode;
-        // iterating over the neigbours & creating the deep copies
+        // creating a new node
+        Node *new_node = new Node(node -> val);
+        mp[node] = new_node;
+
+        // iterating over the neighbors & creating them recursively
         for (auto nbr : node -> neighbors){
-            newnode -> neighbors.push_back(cloneGraph(nbr));
+            new_node -> neighbors.push_back(cloneGraph(nbr));
         }
 
-        return newnode;
+        return new_node;
     }
 };
