@@ -1,34 +1,32 @@
 class Solution {
-    vector<pair<int, int>> dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // 4 - Directions
+    vector<pair<int, int>> dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
-    void dfs(int x, int y, vector<vector<char>> &grid, vector<vector<bool>> &vis){
-        // Marking the current node as visited : 
+    void dfs_traversal(vector<vector<char>> &grid, vector<vector<bool>> &vis, int x, int y){
+        int n = grid.size(), m = grid[0].size();
         vis[x][y] = true;
 
-        // Iterating over the nbrs & calling the recursive dfs over non - visited nbrs : 
-        for (auto [dx, dy] : dirs){
+        for (auto &[dx, dy] : dir){
             int i = x + dx, j = y + dy;
 
-            // Out of boundary cases + Water cases : 
-            if (i < 0 || j < 0 || i >= grid.size() || j >= grid[0].size() || grid[i][j] == '0' || vis[i][j]){
+            if (i < 0 || i >= n || j < 0 || j >= m || vis[i][j] || grid[i][j] != '1'){
                 continue;
             }
 
-            dfs(i, j, grid, vis); // Recursive DFS Call 
+            dfs_traversal(grid, vis, i, j);
         }
     }
 
 public:
     int numIslands(vector<vector<char>>& grid) {
         int n = grid.size(), m = grid[0].size();
-        vector<vector<bool>> vis(n, vector<bool>(m, false)); // Visited or Unvisited Vector
-
+        
         int cnt = 0;
+        vector<vector<bool>> vis(n, vector<bool>(m, false));
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
-                if (grid[i][j] == '1' && !vis[i][j]){
-                    dfs(i, j, grid, vis);
+                if (!vis[i][j] && grid[i][j] == '1'){
                     cnt ++;
+                    dfs_traversal(grid, vis, i, j);
                 }
             }
         }
