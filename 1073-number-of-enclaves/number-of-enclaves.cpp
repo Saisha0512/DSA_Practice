@@ -1,4 +1,3 @@
-// BFS APPROACH : 
 class Solution {
 public:
     int numEnclaves(vector<vector<int>>& grid) {
@@ -6,41 +5,40 @@ public:
 
         queue<pair<int, int>> q;
         vector<vector<bool>> vis(n, vector<bool>(m, false));
-        vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        // Iterating over the boundary elements : 
+        // pushing the boundary 1s 
+        // first col & last col
         for (int i = 0; i < n; i ++){
-            // First col : 
             if (grid[i][0] == 1){
-                vis[i][0] = true;
                 q.push({i, 0});
+                vis[i][0] = true;
             }
-            // Last col : 
             if (grid[i][m - 1] == 1){
-                vis[i][m - 1] = true;
                 q.push({i, m - 1});
+                vis[i][m - 1] = true;
             }
         }
+        // first row & last row
         for (int i = 0; i < m; i ++){
-            // First row : 
             if (grid[0][i] == 1){
-                vis[0][i] = true;
                 q.push({0, i});
+                vis[0][i] = true;
             }
-            // Last row : 
             if (grid[n - 1][i] == 1){
-                vis[n - 1][i] = true;
                 q.push({n - 1, i});
+                vis[n - 1][i] = true;
             }
         }
 
-        // BFS Loop : 
+        // visiting all the lands through which we can walk off the boundary
+        vector<pair<int, int>> dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
         while (!q.empty()){
             auto [x, y] = q.front();
             q.pop();
 
-            for (auto [dx, dy] : dirs){
+            for (auto &[dx, dy] : dir){
                 int i = x + dx, j = y + dy;
-                if (i < 0 || j < 0 || i >= n || j >= m || vis[i][j] || grid[i][j] == 0){
+
+                if (i < 0 || j < 0 || i >= n || j >= m || vis[i][j] || grid[i][j] != 1){
                     continue;
                 }
 
@@ -49,11 +47,11 @@ public:
             }
         }
 
-        // Checking all through all the cells : 
+        // counting the number of unvisited lands
         int cnt = 0;
         for (int i = 0; i < n; i ++){
             for (int j = 0; j < m; j ++){
-                if (grid[i][j] == 1 && !vis[i][j]){
+                if (!vis[i][j] && grid[i][j] == 1){
                     cnt ++;
                 }
             }
