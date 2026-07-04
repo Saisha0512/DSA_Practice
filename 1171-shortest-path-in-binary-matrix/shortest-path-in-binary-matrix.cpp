@@ -1,43 +1,42 @@
 class Solution {
 public:
     int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
-        int n = grid.size();
-        // base case
         if (grid[0][0] != 0){
             return -1;
         }
+        int n = grid.size();
 
-        vector<pair<int, int>> dirs = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
-
-        vector<vector<int>> dist(n, vector<int>(n, -1));
-        queue<pair<int, int>> q;
-        q.push({0, 0});
+        vector<vector<int>> dist(n, vector<int>(n, INT_MAX));
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq; // {dist, x, y}
+        pq.push({1, 0, 0});
         dist[0][0] = 1;
 
-        // bfs loop
-        while (!q.empty()){
-            auto [x, y] = q.front();
-            q.pop();
+        vector<pair<int, int>> dir = {{0, 1}, {1, 0}, {1, 1}, {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}, {1, -1}};
 
-            // if the destination is reached
-            if (x == n - 1 && y == n - 1){
-                return dist[x][y];
+        while (!pq.empty()){
+            auto curr = pq.top();
+            pq.pop();
+            int curr_dist = curr[0], x = curr[1], y = curr[2];
+
+            if (curr_dist > dist[x][y]){
+                continue;
             }
 
-            // iterating over the neighbors of the current node
-            for (auto &[dx, dy] : dirs){
+            for (auto &[dx, dy] : dir){
                 int i = x + dx, j = y + dy;
 
-                // boundary limits
-                if (i < 0 || j < 0 || i >= n || j >= n || grid[i][j] != 0 || dist[i][j] != -1){
+                if (i < 0 || j < 0 || i >= n || j >= n || grid[i][j] == 1){
                     continue;
                 }
 
-                dist[i][j] = dist[x][y] + 1;
-                q.push({i, j});
+                int new_dist = curr_dist + 1;
+                if (new_dist < dist[i][j]){
+                    dist[i][j] = new_dist;
+                    pq.push({dist[i][j], i, j});
+                }
             }
         }
 
-        return -1;
+        return (dist[n - 1][n - 1] == INT_MAX)? -1 : dist[n - 1][n - 1];
     }
 };
