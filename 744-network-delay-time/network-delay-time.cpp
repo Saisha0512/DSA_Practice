@@ -8,11 +8,11 @@ public:
 
         vector<int> dist(n + 1, INT_MAX);
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // min heap
-        pq.push({k, 0});
+        pq.push({0, k});
         dist[k] = 0;
 
         while (!pq.empty()){
-            auto [curr_node, time] = pq.top();
+            auto [time, curr_node] = pq.top();
             pq.pop();
 
             if (time > dist[curr_node]){
@@ -22,7 +22,7 @@ public:
             for (auto &[nbr, wt] : graph[curr_node]){
                 if (dist[nbr] > time + wt){
                     dist[nbr] = time + wt;
-                    pq.push({nbr, dist[nbr]});
+                    pq.push({dist[nbr], nbr});
                 }
             }
         }
