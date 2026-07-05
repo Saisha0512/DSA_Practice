@@ -1,36 +1,37 @@
-// TOP DOWN DP APPROACH : 
 class Solution {
-    int addPath(int i, int j, int n, int m, vector<vector<int>> &dp){
-        // Base Case : Reached the destination cell
-        if (i == n - 1 && j == m - 1){
+    vector<vector<int>> dp;
+    // dp[i][j] = number of paths to reach (i, j) from (0, 0)
+
+    int countPath(int n, int m, int i, int j){
+        // base case
+        if (i == 0 && j == 0){
             return 1;
         }
 
-        // Check DP : 
+        // check dp
         if (dp[i][j] != -1){
             return dp[i][j];
         }
 
-        // Recursive Case : 
-        // Case 1 : Moving right
-        int right = 0;
-        if (j + 1 < m){
-            right = addPath(i, j + 1, n, m, dp);
+        // recursive case
+        int temp_ans = 0;
+        // case 1 : coming to the current cell from up
+        if (i - 1 >= 0){
+            temp_ans += countPath(n, m, i - 1, j);
         }
 
-        // Case 2 : Moving down
-        int down = 0;
-        if (i + 1 < n){
-            down = addPath(i + 1, j, n, m, dp);
+        // case 2 : coming to the current cell from left
+        if (j - 1 >= 0){
+            temp_ans += countPath(n, m, i, j - 1);
         }
 
-        dp[i][j] = (right + down);
-        return dp[i][j];
+        return dp[i][j] = temp_ans;
     }
 
 public:
     int uniquePaths(int n, int m) {
-        vector<vector<int>> dp(n, vector<int>(m, -1));
-        return addPath(0, 0, n, m, dp);
+        dp.resize(n, vector<int>(m, -1));
+
+        return countPath(n, m, n - 1, m - 1);
     }
 };
