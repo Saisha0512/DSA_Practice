@@ -1,44 +1,33 @@
 class Solution {
-    vector<vector<int>> dp;
-
-    int minSum(vector<vector<int>> &grid, int x, int y){
-        int n = grid.size();
-        // base case
-        if (x == 0){ // first row
-            return grid[x][y];
-        }
-
-        // check dp
-        if (dp[x][y] != -1){
-            return dp[x][y];
-        }
-
-        // recursive case
-        // we try using all the elements in the previous row
-        int temp_ans = INT_MAX;
-        for (int j = 0; j < n; j ++){
-            if (y == j){
-                continue;
-            }
-
-            int curr_ans = grid[x][y] + minSum(grid, x - 1, j);
-            temp_ans = min(temp_ans, curr_ans);
-        }
-
-        return dp[x][y] = temp_ans;
-    }
-
 public:
     int minFallingPathSum(vector<vector<int>>& grid) {
         int n = grid.size();
-        dp.resize(n, vector<int>(n, -1));
 
-        // recursively calling the function for every element in the last row
-        int res = INT_MAX;
-        for (int j = 0; j < n; j ++){
-            res = min(res, minSum(grid, n - 1, j));
+        vector<vector<int>> dp(n, vector<int>(n, 0));
+
+        // first row initialization
+        for (int i = 0; i < n; i ++){
+            dp[0][i] = grid[0][i];
         }
 
-        return res;
+        // computing for the further next rows
+        for (int i = 1; i < n; i ++){
+            // iterating over the elements of the previous row
+            for (int j = 0; j < n; j ++){
+                int temp_ans = INT_MAX;
+
+                for (int k = 0; k < n; k ++){
+                    if (j == k){
+                        continue;
+                    }
+
+                    temp_ans = min(temp_ans, dp[i - 1][k] + grid[i][j]);
+                }
+
+                dp[i][j] = temp_ans;
+            }
+        }
+
+        return *min_element(dp[n - 1].begin(), dp[n - 1].end());
     }
 };
