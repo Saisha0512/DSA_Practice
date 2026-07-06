@@ -1,30 +1,22 @@
 class Solution {
-    int calculateSum(vector<vector<int>> &grid, vector<vector<int>> &dp, int i, int j){
-        // Base Case : 
-        if (i == 0 && j == 0){
-            return grid[i][j];
-        }
-        if (i < 0 || j < 0){
-            return INT_MAX;
-        }
-
-        // Check DP :
-        if (dp[i][j] != -1){
-            return dp[i][j];
-        }
-
-        // Recursive Case : 
-        int up = calculateSum(grid, dp, i - 1, j);
-        int left = calculateSum(grid, dp, i, j - 1);
-
-        return dp[i][j] = grid[i][j] + min(up, left);
-    }
-
 public:
     int minPathSum(vector<vector<int>>& grid) {
-        int n = grid.size(), m = grid[0].size();    
-        vector<vector<int>> dp(n, vector<int>(m, -1));
+        int n = grid.size(), m = grid[0].size();
 
-        return calculateSum(grid, dp, n - 1, m - 1);
+        vector<int> dp = grid[0];
+        // taking prefix sum over this
+        for (int i = 1; i < m; i ++){
+            dp[i] += dp[i - 1];
+        }
+
+        // bottom up loop
+        for (int i = 1; i < n; i ++){
+            dp[0] += grid[i][0];
+            for (int j = 1; j < m; j ++){
+                dp[j] = grid[i][j] + min(dp[j], dp[j - 1]);
+            }
+        }
+
+        return dp[m - 1];
     }
 };
