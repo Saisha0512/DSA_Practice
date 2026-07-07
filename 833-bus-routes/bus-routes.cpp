@@ -5,7 +5,6 @@ public:
             return 0;
         }
 
-        int n = routes.size();
         int max_stop = INT_MIN;
         for (auto &r : routes){
             for (int stop : r){
