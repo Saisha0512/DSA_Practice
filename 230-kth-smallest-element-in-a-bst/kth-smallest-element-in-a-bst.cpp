@@ -10,28 +10,24 @@
  * };
  */
 class Solution {
-    void inorder(TreeNode *root, vector<int> &res, bool &found, int k){
-        // Base Case : 
-        if (root == NULL || found){
-            return;
-        }
-
-        // Recursive Case : 
-        inorder(root -> left, res, found, k);
-        res.push_back(root -> val);
-        if (res.size() == k){
-            found = true;
-            return;
-        }
-        inorder(root -> right, res, found, k);
-    }
-
 public:
-    int kthSmallest(TreeNode* root, int k) {
-        vector<int> res;
-        bool found = false;
-        inorder(root, res, found, k);
+    int kthSmallest(TreeNode* root, int &k) {
+        // base case
+        if (!root){
+            return -1;
+        }
 
-        return res[k - 1];
+        // recursive case
+        int ltree = kthSmallest(root -> left, k);
+        if (ltree != -1){
+            return ltree;
+        }
+        
+        k --;
+        if (k == 0){
+            return root -> val;
+        }
+
+        return kthSmallest(root -> right, k);
     }
 };
