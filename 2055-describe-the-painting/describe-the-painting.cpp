@@ -13,16 +13,17 @@ public:
 
         // going over the map & merging the overlapping segments
         vector<vector<long long>> res;
-        vector<long long> prev;
-        long long presum = 0;
-        for (auto &[point, color] : mp){
-            presum += color;
-            if (point != min_start && prev[1] > 0){
-                vector<long long> temp = {prev[0], point, prev[1]};
-                res.push_back(temp);
+        auto it = mp.begin();
+        long long start = it -> first, sum = it -> second;
+        it ++;
+        while (it != mp.end()){
+            if (sum > 0){
+                res.push_back({start, it -> first, sum});
             }
 
-            prev = {point, presum};
+            start = it -> first;
+            sum += it -> second;
+            it ++;
         }
         
         return res;
