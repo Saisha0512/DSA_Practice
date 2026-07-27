@@ -10,27 +10,25 @@
  * };
  */
 class Solution {
-    // {max_branch_sum, max_path_sum}
-    pair<int, int> check(TreeNode *root){
+    int max_sum = INT_MIN;
+
+    int checkSum(TreeNode *root){
         // base case
-        if (root == NULL){
-            return {0, INT_MIN};
+        if (!root){
+            return 0;
         }
 
         // recursive case
-        auto ltree = check(root -> left);
-        auto rtree = check(root -> right);
+        int ltree = max(0, checkSum(root -> left)), rtree = max(0, checkSum(root -> right));
+        max_sum = max(max_sum, ltree + root -> val + rtree);
 
-        int ans_through_root = max(0, ltree.first) + max(0, rtree.first) + root -> val;
-
-        int max_branch_sum = max({ltree.first, rtree.first, 0}) + root -> val;
-        int max_path_sum = max({ltree.second, rtree.second, ans_through_root});
-
-        return {max_branch_sum, max_path_sum};
+        return max(ltree, rtree) + root -> val;
     }
 
 public:
     int maxPathSum(TreeNode* root) {
-        return check(root).second;
+        checkSum(root);
+
+        return max_sum;
     }
 };
