@@ -13,41 +13,40 @@ class Solution {
 public:
     int widthOfBinaryTree(TreeNode* root) {
         // base case
-        if (root == NULL){
+        if (!root){
             return 0;
         }
 
-        long long res = 0;
+        long long max_wid = 0;
+
         queue<pair<TreeNode*, long long>> q;
         q.push({root, 0});
-
+        // level order traversal
         while (!q.empty()){
             int size = q.size();
-            long long first, last;
+            long long first = q.front().second, last = 0;
 
             for (int i = 0; i < size; i ++){
                 auto [curr_node, idx] = q.front();
                 q.pop();
+                idx -= first;
 
-                if (i == 0){
-                    first = idx;
-                }
                 if (i == size - 1){
                     last = idx;
                 }
 
                 // inserting the children into the queue
                 if (curr_node -> left){
-                    q.push({curr_node -> left, 2*idx + 1 - first});
+                    q.push({curr_node -> left, 2 * idx + 1});
                 }
                 if (curr_node -> right){
-                    q.push({curr_node -> right, 2*idx + 2 - first});
+                    q.push({curr_node -> right, 2 * idx + 2});
                 }
             }
 
-            res = max(res, last - first + 1);
+            max_wid = max(max_wid, last + 1);
         }
 
-        return res;
+        return max_wid;
     }
 };
